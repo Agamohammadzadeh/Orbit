@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'attachments' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/attachments'),
+            'serve' => false,   // مستقیم از URL قابل دسترس نیست؛ فقط از کنترلر بعد از چک Policy
+            'throw' => true,
+        ],
+
     ],
 
     /*
