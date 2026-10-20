@@ -1,9 +1,219 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+/* فونت‌ها از npm و به‌صورت لوکال لود می‌شن (بدون وابستگی به Google Fonts) */
+@font-face {
+    font-family: "Vazir";
+    src: url("../fonts/Vazir/Vazir-Light-FD.woff2") format("woff2")
+         url("../fonts/Vazir/Vazir-Light-FD.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Vazir";
+    src: url("../fonts/Vazir/Vazir-Regular-FD.woff2") format("woff2")
+         url("../fonts/Vazir/Vazir-Regular-FD.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Vazir";
+    src: url("../fonts/Vazir/Vazir-Medium-FD.woff2") format("woff2")
+         url("../fonts/Vazir/Vazir-Medium-FD.woff") format("woff");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Vazir";
+    src: url("../fonts/Vazir/Vazir-Bold-FD.woff2") format("woff2")
+         url("../fonts/Vazir/Vazir-Bold-FD.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Vazir";
+    src: url("../fonts/Vazir/Vazir-Black-FD.woff2") format("woff2")
+         url("../fonts/Vazir/Vazir-Black-FD.woff") format("woff");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@source "../../storage/framework/views/*.php";
+@source "../views";
+@source "../js";
+@source "../../app/Enums";
+
+/* دارک مود با کلاس .dark روی <html> (نه فقط prefers-color-scheme) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------
+   ۱) توکن‌های معنایی؛ مقدارشان بین روشن و تیره عوض می‌شود
+------------------------------------------------------------------- */
+:root {
+    --canvas: #F7F7FA;          /* پس‌زمینه‌ی صفحه */
+    --surface: #FFFFFF;         /* کارت و پنل */
+    --line: #E6E6EE;            /* مرزها */
+    --fg: #22223B;              /* متن اصلی */
+    --muted: #6B6B85;           /* متن فرعی */
+    --primary: #5B5BD6;
+    --primary-hover: #4A4AC2;
+    --primary-soft: #EEEEFD;
+    --on-primary: #FFFFFF;
+    --shadow-rgb: 34 34 59;
+}
+
+.dark {
+    --canvas: #15151E;
+    --surface: #1E1E2A;
+    --line: #2E2E3F;
+    --fg: #ECECF4;
+    --muted: #9A9AB5;
+    --primary: #7C7CF0;
+    --primary-hover: #8D8DF5;
+    --primary-soft: #262647;
+    /* روی نیلی روشنِ دارک، متن تیره کنتراست بهتری از سفید دارد */
+    --on-primary: #15151E;
+    --shadow-rgb: 0 0 0;
+}
+
+/* ------------------------------------------------------------------
+   ۲) تم Tailwind: رنگ‌ها، فونت، گردی، سایه، انیمیشن
+------------------------------------------------------------------- */
+@theme inline {
+    --color-canvas: var(--canvas);
+    --color-surface: var(--surface);
+    --color-line: var(--line);
+    --color-fg: var(--fg);
+    --color-muted: var(--muted);
+    --color-primary: var(--primary);
+    --color-primary-hover: var(--primary-hover);
+    --color-primary-soft: var(--primary-soft);
+    --color-on-primary: var(--on-primary);
+}
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* رنگ‌های ثابت (در هر دو حالت یکسان) */
+    --color-accent: #FF7A59;
+    --color-success: #2FB67C;
+    --color-warning: #F5A524;
+    --color-danger: #E5484D;
+
+    /* نوع تسک */
+    --color-type-feature: #5B5BD6;
+    --color-type-bug: #E5484D;
+    --color-type-improvement: #12A594;
+    --color-type-design: #D6409F;
+    --color-type-content: #F5A524;
+
+    /* اولویت */
+    --color-prio-low: #8B8BA3;
+    --color-prio-medium: #3E8EF7;
+    --color-prio-high: #F76B15;
+    --color-prio-urgent: #E5484D;
+
+    /* حروف لاتین با Space Grotesk، فارسی با Vazir */
+    --font-sans: "Space Grotesk Variable", "Vazir", ui-sans-serif, system-ui, sans-serif;
+    --font-fa: "Vazir", ui-sans-serif, system-ui, sans-serif;
+    --font-brand: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+
+    --radius-control: 0.5rem;   /* 8px  دکمه و اینپوت */
+    --radius-card: 0.75rem;     /* 12px کارت */
+    --radius-panel: 1rem;       /* 16px پنل و مودال */
+
+    --shadow-card: 0 1px 2px rgb(var(--shadow-rgb) / 0.04), 0 4px 12px rgb(var(--shadow-rgb) / 0.06);
+    --shadow-pop: 0 8px 30px rgb(var(--shadow-rgb) / 0.14);
+
+    --ease-orbit: cubic-bezier(0.22, 1, 0.36, 1);
+    --default-transition-duration: 150ms;
+    --default-transition-timing-function: var(--ease-orbit);
+
+    --animate-pop-in: pop-in 180ms var(--ease-orbit);
+    --animate-check-burst: check-burst 400ms var(--ease-orbit);
+    --animate-slide-in-end: slide-in-end 200ms var(--ease-orbit);
+
+    @keyframes pop-in {
+        from { opacity: 0; transform: scale(0.96); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes check-burst {
+        0%   { opacity: 0; transform: scale(0.6); }
+        60%  { opacity: 1; transform: scale(1.15); }
+        100% { transform: scale(1); }
+    }
+    /* برای Drawer: در RTL از چپ وارد می‌شود، در LTR از راست */
+    @keyframes slide-in-end {
+        from { opacity: 0; transform: translateX(var(--slide-from, -16px)); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+}
+
+/* ------------------------------------------------------------------
+   ۳) استایل‌های پایه
+------------------------------------------------------------------- */
+@layer base {
+    /* در Tailwind 4 رنگ پیش‌فرض border برابر currentColor است؛ اینجا به رنگ خط خودمان برمی‌گردد */
+    *, ::after, ::before, ::backdrop, ::file-selector-button {
+        border-color: var(--line);
+    }
+
+    html {
+        color-scheme: light;
+        -webkit-text-size-adjust: 100%;
+    }
+    html.dark { color-scheme: dark; }
+    html[dir="ltr"] { --slide-from: 16px; }
+
+    body {
+        background-color: var(--canvas);
+        color: var(--fg);
+        font-family: var(--font-sans);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    ::selection { background: var(--primary-soft); }
+
+    /* جلوگیری از پرش UI قبل از لود Alpine / Livewire */
+    [x-cloak], [wire\:cloak] { display: none !important; }
+
+    /* اسکرول‌بار ظریف برای ستون‌های کانبان */
+    * { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, ::before, ::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+/* ------------------------------------------------------------------
+   ۴) یوتیلیتی‌های اختصاصی
+------------------------------------------------------------------- */
+@utility card {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+@utility panel {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-pop);
+}
+
+/* اعداد فارسی/لاتین هم‌عرض در جدول‌ها و گزارش‌ها */
+@utility tabular {
+    font-variant-numeric: tabular-nums;
 }
