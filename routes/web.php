@@ -12,6 +12,10 @@ Route::middleware('auth')->group(function () {
 
     Route::livewire('/settings/profile', 'pages::settings.profile')->name('settings.profile');
 
+    Route::middleware('can:users.manage')->prefix('team')->group(function () {
+        Route::livewire('/', 'pages::team.index')->name('team');
+    });
+
     Route::post('/logout', function () {
         Auth::logout();
         request()->session()->invalidate();

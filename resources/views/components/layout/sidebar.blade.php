@@ -79,8 +79,7 @@
                         @if ($canUsers)
                             <li>
                                 <x-ui.nav-item
-{{--                                    :href="route('team')" --}}
-                                    href="#"
+                                    :href="route('team')"
                                     icon="users"
                                     label="اعضای تیم"
                                     :active="request()->routeIs('team')"
