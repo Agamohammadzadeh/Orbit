@@ -217,3 +217,13 @@
 @utility tabular {
     font-variant-numeric: tabular-nums;
 }
+
+/* فیلد ورودی (متن، ایمیل، رمز، ...) */
+@utility input {
+    @apply block h-11 w-full rounded-control border border-line bg-canvas px-3.5 text-[0.9375rem] text-fg transition placeholder:text-muted/70 hover:border-primary/40 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 aria-invalid:border-danger aria-invalid:focus:ring-danger/20;
+}
+
+/* دکمه‌ی اصلی */
+@utility btn-primary {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-control bg-primary px-5 text-[0.9375rem] font-semibold text-on-primary transition hover:bg-primary-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
+}
