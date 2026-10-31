@@ -38,64 +38,37 @@
         <livewire:notification-bell />
 
         {{-- منوی کاربر --}}
-        <div class="relative" x-data="{ open: false }" @keydown.escape.window="open = false">
-            <button
-                type="button"
-                @click="open = !open"
-                :aria-expanded="open"
-                aria-haspopup="menu"
-                class="flex items-center gap-2.5 rounded-control p-1 transition hover:bg-line/50 md:pe-2"
-            >
-                <x-ui.avatar :user="auth()->user()" :size="36" />
-                <div class="hidden text-start leading-tight md:block">
-                    <div class="text-sm font-medium">{{ auth()->user()->name }}</div>
-                    <div class="text-xs text-muted">{{ auth()->user()->roleLabel() }}</div>
-                </div>
-                <x-ui.icon name="chevron-down" class="hidden size-4 text-muted md:block" />
-            </button>
+        <x-ui.dropdown width="w-60">
+            <x-slot:trigger>
+                <button
+                    type="button"
+                    @click="toggle()"
+                    :aria-expanded="open"
+                    aria-haspopup="menu"
+                    class="flex items-center gap-2.5 rounded-control p-1 transition hover:bg-line/50 md:pe-2"
+                >
+                    <x-ui.avatar :user="auth()->user()" :size="36" />
+                    <div class="hidden text-start leading-tight md:block">
+                        <div class="text-sm font-medium">{{ auth()->user()->name }}</div>
+                        <div class="text-xs text-muted">{{ auth()->user()->roleLabel() }}</div>
+                    </div>
+                    <x-ui.icon name="chevron-down" class="hidden size-4 text-muted md:block" />
+                </button>
+            </x-slot:trigger>
 
-            <div
-                x-show="open"
-                x-cloak
-                @click.outside="open = false"
-                x-transition:enter="transition ease-out duration-150"
-                x-transition:enter-start="opacity-0 scale-95"
-                x-transition:enter-end="opacity-100 scale-100"
-                x-transition:leave="transition ease-in duration-100"
-                x-transition:leave-start="opacity-100 scale-100"
-                x-transition:leave-end="opacity-0 scale-95"
-                class="panel absolute end-0 top-full z-50 mt-2 w-60 origin-top-end p-1.5"
-                role="menu"
-            >
-                <div class="border-b border-line px-3 pb-2.5 pt-2">
-                    <div class="truncate text-sm font-medium">{{ auth()->user()->name }}</div>
-                    <div dir="ltr" class="truncate text-start text-xs text-muted">{{ auth()->user()->email }}</div>
-                </div>
-
-                <div class="space-y-0.5 pt-1.5">
-                    <a
-                        href="{{ route('settings.profile') }}"
-                        wire:navigate
-                        role="menuitem"
-                        class="flex h-9 items-center gap-2.5 rounded-control px-3 text-sm transition hover:bg-line/50"
-                    >
-                        <x-ui.icon name="user" class="size-4.5 text-muted" />
-                        پروفایل من
-                    </a>
-
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button
-                            type="submit"
-                            role="menuitem"
-                            class="flex h-9 w-full items-center gap-2.5 rounded-control px-3 text-sm text-danger transition hover:bg-danger/10"
-                        >
-                            <x-ui.icon name="logout" class="size-4.5" />
-                            خروج
-                        </button>
-                    </form>
-                </div>
+            <div class="border-b border-line px-3 pb-2.5 pt-2">
+                <div class="truncate text-sm font-medium">{{ auth()->user()->name }}</div>
+                <div dir="ltr" class="truncate text-start text-xs text-muted">{{ auth()->user()->email }}</div>
             </div>
-        </div>
+
+            <div class="space-y-0.5 pt-1.5">
+                <x-ui.dropdown-item :href="route('settings.profile')" icon="user">پروفایل من</x-ui.dropdown-item>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-ui.dropdown-item type="submit" icon="logout" tone="danger">خروج</x-ui.dropdown-item>
+                </form>
+            </div>
+        </x-ui.dropdown>
     </div>
 </header>
