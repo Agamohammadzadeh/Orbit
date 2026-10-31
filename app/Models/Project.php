@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ProjectStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,7 +18,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class Project extends Model
 {
-    use LogsActivity, SoftDeletes;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'client_id',
@@ -175,6 +176,6 @@ class Project extends Model
             ->useLogName('project')
             ->logOnly(['name', 'status', 'client_id', 'start_date', 'end_date', 'archived_at'])
             ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->dontLogEmptyChanges();
     }
 }

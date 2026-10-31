@@ -7,6 +7,7 @@ use App\Enums\TaskStatus;
 use App\Enums\TaskType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,7 +19,7 @@ use Spatie\Activitylog\Support\LogOptions;
 
 class Task extends Model
 {
-    use LogsActivity, SoftDeletes;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'project_id',
@@ -237,6 +238,6 @@ class Task extends Model
                 'assignee_id', 'due_date', 'sprint_id', 'phase_id', 'estimate_minutes',
             ])
             ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->dontLogEmptyChanges();
     }
 }

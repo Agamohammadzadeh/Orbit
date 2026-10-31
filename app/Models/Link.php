@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use App\Enums\LinkType;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Link extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'linkable_type',
         'linkable_id',

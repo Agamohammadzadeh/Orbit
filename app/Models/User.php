@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, HasFactory, Notifiable;
 
     protected $fillable = [
         'name',

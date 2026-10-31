@@ -18,6 +18,13 @@ return [
     // سیستم داخلی است؛ ثبت‌نام عمومی نداریم
     'registration_enabled' => (bool) env('ORBIT_REGISTRATION_ENABLED', false),
 
+    // دیتای ادمین اصلی
+    'admin' => [
+        'name' => env('ORBIT_ADMIN_NAME', 'مدیر Orbit'),
+        'email' => env('ORBIT_ADMIN_EMAIL', 'admin@orbit.test'),
+        'password' => env('ORBIT_ADMIN_PASSWORD'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | پیوست‌ها
