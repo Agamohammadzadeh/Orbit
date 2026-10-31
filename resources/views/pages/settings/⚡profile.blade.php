@@ -156,7 +156,7 @@ class extends Component {
     };
 @endphp
 
-<div class="space-y-6">
+<div class="mx-auto max-w-6xl space-y-6">
     <div>
         <h1 class="text-2xl font-bold tracking-tight">پروفایل من</h1>
         <p class="mt-1 text-sm text-muted">اطلاعات حساب، رمز عبور و ظاهر برنامه.</p>

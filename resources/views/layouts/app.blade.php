@@ -53,9 +53,7 @@
     <x-layout.header />
 
     <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-        <div class="w-full max-w-[90rem]">
-            {{ $slot }}
-        </div>
+        {{ $slot }}
     </main>
 </div>
 </body>
