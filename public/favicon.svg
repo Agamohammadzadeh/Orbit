@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="136" height="136"
+     viewBox="144 503 136 136">
+    <g id="div1">
+        <g>
+            <rect width="136" height="136" x="144" y="503" fill="rgb(91, 91, 214)" rx="32" ry="32"/>
+        </g>
+        <g id="svg1" role="img" mask="url(#mask-for-svg11)">
+            <mask id="mask-for-svg11">
+                <rect width="96" height="96" x="164" y="523" fill="#ffffff"/>
+            </mask>
+            <g transform="matrix(1.5 0 0 1.5 164 523)">
+                <g transform="matrix(0.906308, -0.422618, 0.422618, 0.906308, -10.5256, 16.5219)" color="rgb(0, 0, 0)"
+                   fill="rgb(0, 0, 0)" stroke="none">
+                    <ellipse cx="32" cy="32" rx="27" ry="10.5" fill="none" stroke="rgb(255, 255, 255)"
+                             stroke-width="3.5px" color="rgb(0, 0, 0)"/>
+                    <circle cx="32" cy="32" r="14" fill="rgb(255, 255, 255)" color="rgb(0, 0, 0)" stroke="none"/>
+                    <circle cx="59" cy="32" r="5.5" fill="rgb(255, 122, 89)" color="rgb(0, 0, 0)" stroke="none"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
