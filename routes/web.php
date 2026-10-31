@@ -10,6 +10,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::livewire('/', 'pages::dashboard')->name('dashboard');
 
+    Route::livewire('/settings/profile', 'pages::settings.profile')->name('settings.profile');
+
     Route::post('/logout', function () {
         Auth::logout();
         request()->session()->invalidate();

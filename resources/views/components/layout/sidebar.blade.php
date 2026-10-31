@@ -1,9 +1,9 @@
 @php
     $nav = [
         ['route' => 'dashboard', 'match' => 'dashboard', 'icon' => 'home', 'label' => 'داشبورد'],
-        ['route' => 'projects.index', 'match' => 'projects.*', 'icon' => 'folder', 'label' => 'پروژه‌ها'],
-        ['route' => 'calendar', 'match' => 'calendar', 'icon' => 'calendar', 'label' => 'تقویم'],
-        ['route' => 'reports', 'match' => 'reports', 'icon' => 'chart', 'label' => 'گزارش‌ها'],
+        ['route' => 'dashboard' /*'projects.index'*/, 'match' => 'projects.*', 'icon' => 'folder', 'label' => 'پروژه‌ها'],
+        ['route' => 'dashboard' /*'calendar'*/, 'match' => 'calendar', 'icon' => 'calendar', 'label' => 'تقویم'],
+        ['route' => 'dashboard' /*'reports'*/, 'match' => 'reports', 'icon' => 'chart', 'label' => 'گزارش‌ها'],
     ];
 @endphp
 
@@ -40,8 +40,7 @@
             @foreach ($nav as $item)
                 <li>
                     <x-ui.nav-item
-{{--                        :href="route($item['route'])"--}}
-                        href="#"
+                        :href="route($item['route'])"
                         :icon="$item['icon']"
                         :label="$item['label']"
                         :active="request()->routeIs($item['match'])"

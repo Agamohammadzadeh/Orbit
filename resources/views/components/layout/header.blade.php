@@ -74,8 +74,7 @@
 
                 <div class="space-y-0.5 pt-1.5">
                     <a
-{{--                        href="{{ route('settings.profile') }}"--}}
-                        href="#"
+                        href="{{ route('settings.profile') }}"
                         wire:navigate
                         role="menuitem"
                         class="flex h-9 items-center gap-2.5 rounded-control px-3 text-sm transition hover:bg-line/50"
