@@ -227,3 +227,17 @@
 @utility btn-primary {
     @apply inline-flex h-11 items-center justify-center gap-2 rounded-control bg-primary px-5 text-[0.9375rem] font-semibold text-on-primary transition hover:bg-primary-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
 }
+
+/* ------------------------------------------------------------------
+   سایدبار: عرض با متغیر کنترل می‌شود (باز: ۱۶rem، جمع‌شده: ۴.۵rem)
+   کلاس sb-collapsed روی <html> می‌نشیند تا قبل از رندر اعمال شود (بدون پرش)
+------------------------------------------------------------------- */
+@custom-variant sb-collapsed (&:where(.sb-collapsed, .sb-collapsed *));
+
+:root {
+    --sidebar-w: 16rem;
+}
+
+html.sb-collapsed {
+    --sidebar-w: 4.5rem;
+}

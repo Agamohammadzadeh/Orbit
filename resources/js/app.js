@@ -39,3 +39,40 @@ document.addEventListener('alpine:init', () => {
 document.addEventListener('livewire:navigated', () => {
     window.Alpine?.store('theme')?.apply();
 });
+
+
+// ---------------- سایدبار ----------------
+const SIDEBAR_KEY = 'orbit-sidebar';
+
+document.addEventListener('alpine:init', () => {
+    // استفاده در Blade:  $store.sidebar.toggle()  |  $store.sidebar.mobileOpen
+    window.Alpine.store('sidebar', {
+        collapsed: document.documentElement.classList.contains('sb-collapsed'),
+        mobileOpen: false,
+
+        // دسکتاپ: جمع/باز می‌کند و ذخیره می‌کند. موبایل: کشوی منو را باز/بسته می‌کند.
+        toggle() {
+            if (window.matchMedia('(min-width: 1024px)').matches) {
+                this.collapsed = !this.collapsed;
+                document.documentElement.classList.toggle('sb-collapsed', this.collapsed);
+                try {
+                    localStorage.setItem(SIDEBAR_KEY, this.collapsed ? '1' : '0');
+                } catch (e) {}
+            } else {
+                this.mobileOpen = !this.mobileOpen;
+            }
+        },
+
+        closeMobile() {
+            this.mobileOpen = false;
+        },
+    });
+});
+
+// بعد از هر wire:navigate: کشوی موبایل بسته شود و حالت جمع‌شده حفظ بماند
+document.addEventListener('livewire:navigated', () => {
+    const store = window.Alpine?.store('sidebar');
+    if (!store) return;
+    store.closeMobile();
+    document.documentElement.classList.toggle('sb-collapsed', store.collapsed);
+});

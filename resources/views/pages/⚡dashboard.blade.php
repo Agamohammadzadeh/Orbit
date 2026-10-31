@@ -1,13 +1,12 @@
 <?php
 
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new class extends Component
-{
-    //
-};
+new #[Title('داشبورد')] class extends Component {};
 ?>
 
 <div>
-    {{-- Do what you can, with what you have, where you are. - Theodore Roosevelt --}}
+    <h1 class="text-2xl font-bold tracking-tight">سلام {{ auth()->user()->name }}</h1>
+    <p class="mt-1 text-muted">داشبورد به‌زودی اینجا ساخته می‌شود.</p>
 </div>
