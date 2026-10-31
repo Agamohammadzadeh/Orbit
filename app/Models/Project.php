@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Ability;
 use App\Enums\ProjectStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -129,10 +130,10 @@ class Project extends Model
         return $query->where('status', $status->value);
     }
 
-    /** مدیر همه‌ی پروژه‌ها را می‌بیند، عضو فقط پروژه‌های خودش را */
+    /** با دسترسی «دیدن همه‌ی پروژه‌ها» همه را می‌بیند، وگرنه فقط پروژه‌های عضویت */
     public function scopeVisibleTo(Builder $query, User $user): Builder
     {
-        if ($user->isAdmin()) {
+        if ($user->can(Ability::ProjectsViewAll->value)) {
             return $query;
         }
 

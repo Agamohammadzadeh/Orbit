@@ -8,8 +8,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // داده‌های ضروری (در production هم اجرا می‌شوند)
+        // داده‌های ضروری (در production هم اجرا می‌شوند). ترتیب مهم است: نقش‌ها قبل از مدیر
         $this->call([
+            RolePermissionSeeder::class,
             LabelSeeder::class,
             AdminUserSeeder::class,
         ]);

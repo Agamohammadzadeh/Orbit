@@ -9,17 +9,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role',
+        'email_verified_at',
         'avatar_path',
         'is_active',
         'last_seen_at',
@@ -30,12 +32,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /** نقش‌ها همیشه همراه کاربر لود می‌شوند (جلوگیری از lazy loading در strict mode) */
+    protected $with = ['roles'];
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role' => UserRole::class,
             'is_active' => 'boolean',
             'last_seen_at' => 'datetime',
         ];
@@ -91,7 +95,48 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role === UserRole::Admin;
+        return $this->hasRole(UserRole::Admin->value);
+    }
+
+    /** هر کاربر یک نقش دارد (UI فقط یک انتخاب می‌دهد) */
+    public function roleName(): ?string
+    {
+        return $this->roles->first()?->name;
+    }
+
+    public function roleLabel(): string
+    {
+        return UserRole::labelFor($this->roleName());
+    }
+
+    /** آیا این کاربر تنها مدیر فعال سیستم است؟ (حفاظت از قفل‌شدن بیرون از سیستم) */
+    public function isLastActiveAdmin(): bool
+    {
+        if (! $this->isAdmin()) {
+            return false;
+        }
+
+        return ! static::role(UserRole::Admin->value)
+            ->where('is_active', true)
+            ->whereKeyNot($this->getKey())
+            ->exists();
+    }
+
+    public function isMemberOf(Project|int $project): bool
+    {
+        $id = $project instanceof Project ? $project->getKey() : $project;
+
+        return $this->projects()->whereKey($id)->exists();
+    }
+
+    /** همه‌ی سشن‌های دیتابیسی این کاربر را می‌بندد (غیرفعال‌سازی، ریست رمز) */
+    public function terminateSessions(): void
+    {
+        $this->forceFill(['remember_token' => null])->save();
+
+        if (config('session.driver') === 'database') {
+            DB::table(config('session.table', 'sessions'))->where('user_id', $this->getKey())->delete();
+        }
     }
 
     /** حروف اول نام برای آواتار پیش‌فرض (حداکثر دو حرف) */

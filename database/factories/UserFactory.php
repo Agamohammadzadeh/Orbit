@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends Factory<User>
@@ -28,16 +29,34 @@ class UserFactory extends Factory
             'email' => fake()->unique()->numerify('user#####@orbit.test'),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => UserRole::Member,
             'is_active' => true,
             'last_seen_at' => fake()->optional(0.8)->dateTimeBetween('-3 days', 'now'),
             'remember_token' => Str::random(10),
         ];
     }
 
+    /**
+     * هر کاربر جدید به‌صورت پیش‌فرض نقش «عضو تیم» می‌گیرد.
+     * اگر state دیگری (admin، withRole) صدا زده شود، بعد از این تابع اجرا و نقش را جایگزین می‌کند.
+     * توجه: دسترسی‌های نقش‌ها از RolePermissionSeeder می‌آیند؛ در تست‌ها آن را seed کن.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            Role::findOrCreate(UserRole::Member->value, 'web');
+            $user->assignRole(UserRole::Member->value);
+        });
+    }
+
     public function admin(): static
     {
-        return $this->state(fn () => ['role' => UserRole::Admin]);
+        return $this->withRole(UserRole::Admin->value);
+    }
+
+    /** نقش را با نام مشخص می‌کند؛ نقش باید قبلاً ساخته شده باشد (RolePermissionSeeder) */
+    public function withRole(string $role): static
+    {
+        return $this->afterCreating(fn (User $user) => $user->syncRoles($role));
     }
 
     public function inactive(): static

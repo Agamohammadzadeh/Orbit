@@ -32,7 +32,7 @@ class DemoDataSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([LabelSeeder::class, AdminUserSeeder::class]);
+        $this->call([RolePermissionSeeder::class, LabelSeeder::class, AdminUserSeeder::class]);
 
         if (Project::query()->withTrashed()->exists()) {
             $this->command?->warn('داده‌ی نمونه قبلاً ساخته شده؛ رد شد. (migrate:fresh --seed برای ساخت دوباره)');
@@ -52,7 +52,7 @@ class DemoDataSeeder extends Seeder
 
     private function seedDemo(): void
     {
-        $admin = User::query()->where('role', UserRole::Admin->value)->firstOrFail();
+        $admin = User::role(UserRole::Admin->value)->firstOrFail();
         $labels = Label::query()->get();
 
         // ---------- تیم ----------
@@ -66,6 +66,10 @@ class DemoDataSeeder extends Seeder
 
         // عضو غیرفعال (برای تست فیلتر و نمایش)
         User::factory()->inactive()->create(['name' => 'پویا نوری', 'email' => 'pooya@orbit.test']);
+
+        // دو کاربر با نقش‌های سفارشی برای تست دسترسی‌ها (نام نقش‌ها از config('orbit.default_roles'))
+        $manager = User::factory()->withRole('مدیر پروژه')->create(['name' => 'کیان مرادی', 'email' => 'pm@orbit.test']);
+        $viewer = User::factory()->withRole('ناظر')->create(['name' => 'ناظر نمونه', 'email' => 'viewer@orbit.test']);
 
         $clients = Client::factory()->count(4)->create();
 
@@ -101,6 +105,13 @@ class DemoDataSeeder extends Seeder
             // ---------- اعضا ----------
             $members = $team->shuffle()->take(3)->push($admin)->values();
             $project->members()->attach($members->pluck('id')->all());
+
+            // مدیر پروژه در همه‌ی پروژه‌ها عضو است، ناظر فقط در دو پروژه‌ی اول
+            // (این دو در $members نیستند، پس تسکی به آن‌ها اختصاص داده نمی‌شود)
+            $project->members()->attach($manager->id);
+            if ($i < 2) {
+                $project->members()->attach($viewer->id);
+            }
 
             // ---------- مراحل از قالب ----------
             $phases = collect(config("orbit.phase_templates.{$spec['template']}.phases", []))
@@ -148,6 +159,8 @@ class DemoDataSeeder extends Seeder
         $this->command?->table(['ایمیل', 'رمز', 'نقش'], [
             [config('orbit.admin.email'), config('orbit.admin.password') ?: 'password', 'مدیر'],
             ['sara@orbit.test (و بقیه‌ی اعضا)', 'password', 'عضو تیم'],
+            ['pm@orbit.test', 'password', 'مدیر پروژه'],
+            ['viewer@orbit.test', 'password', 'ناظر (فقط‌خواندنی)'],
         ]);
     }
 

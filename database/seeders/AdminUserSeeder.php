@@ -14,6 +14,9 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
+        // نقش admin باید وجود داشته باشد (اجرای چندباره‌ی سیدر نقش‌ها بی‌خطر است)
+        $this->call(RolePermissionSeeder::class);
+
         $email = config('orbit.admin.email');
         $password = config('orbit.admin.password');
 
@@ -27,16 +30,17 @@ class AdminUserSeeder extends Seeder
             $password = 'password';
         }
 
-        User::query()->updateOrCreate(
+        $user = User::query()->updateOrCreate(
             ['email' => $email],
             [
                 'name' => config('orbit.admin.name'),
                 'password' => $password, // cast ‏hashed خودش هش می‌کند
-                'role' => UserRole::Admin,
                 'is_active' => true,
                 'email_verified_at' => now(),
             ],
         );
+
+        $user->syncRoles(UserRole::Admin->value);
 
         $this->command?->info("مدیر آماده است: {$email}");
     }

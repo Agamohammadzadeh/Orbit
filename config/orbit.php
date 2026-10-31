@@ -18,11 +18,37 @@ return [
     // سیستم داخلی است؛ ثبت‌نام عمومی نداریم
     'registration_enabled' => (bool) env('ORBIT_REGISTRATION_ENABLED', false),
 
-    // دیتای ادمین اصلی
+    /*
+    |--------------------------------------------------------------------------
+    | مدیر اولیه (AdminUserSeeder)
+    |--------------------------------------------------------------------------
+    | از config خوانده می‌شود، نه مستقیم env()، تا با config:cache هم کار کند.
+    */
     'admin' => [
         'name' => env('ORBIT_ADMIN_NAME', 'مدیر Orbit'),
         'email' => env('ORBIT_ADMIN_EMAIL', 'admin@orbit.test'),
         'password' => env('ORBIT_ADMIN_PASSWORD'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | نقش‌های پیش‌فرض (RolePermissionSeeder)
+    |--------------------------------------------------------------------------
+    | کلید = نام نقش، مقدار = دسترسی‌ها (مقدارهای App\Enums\Ability).
+    | - admin همیشه همه‌ی دسترسی‌ها را می‌گیرد (مقدار '*').
+    | - بقیه فقط وقتی ساخته می‌شوند که وجود نداشته باشند؛ سیدر دوباره‌اجراشده
+    |   تغییرهایی که مدیر از UI داده را بازنویسی نمی‌کند.
+    | - نام‌های admin و member سیستمی‌اند (قابل حذف یا تغییر نام نیستند).
+    */
+    'default_roles' => [
+        'admin' => ['*'],
+        'member' => ['tasks.write', 'comments.create'],
+        'مدیر پروژه' => [
+            'projects.create', 'projects.archive',
+            'tasks.write', 'tasks.delete', 'comments.create',
+            'clients.manage',
+        ],
+        'ناظر' => [],
     ],
 
     /*
@@ -65,42 +91,42 @@ return [
     'kanban' => [
         'position_gap' => 1000,
         'columns' => [
-            'todo'        => ['label' => 'انجام‌نشده',  'color' => '#8B8BA3'],
+            'todo' => ['label' => 'انجام‌نشده',  'color' => '#8B8BA3'],
             'in_progress' => ['label' => 'در حال انجام', 'color' => '#3E8EF7'],
-            'in_review'   => ['label' => 'در بازبینی',   'color' => '#F5A524'],
-            'done'        => ['label' => 'تمام‌شده',     'color' => '#2FB67C'],
+            'in_review' => ['label' => 'در بازبینی',   'color' => '#F5A524'],
+            'done' => ['label' => 'تمام‌شده',     'color' => '#2FB67C'],
         ],
     ],
 
     'priorities' => [
-        'low'    => ['label' => 'کم',    'color' => '#8B8BA3'],
+        'low' => ['label' => 'کم',    'color' => '#8B8BA3'],
         'medium' => ['label' => 'متوسط', 'color' => '#3E8EF7'],
-        'high'   => ['label' => 'زیاد',  'color' => '#F76B15'],
+        'high' => ['label' => 'زیاد',  'color' => '#F76B15'],
         'urgent' => ['label' => 'فوری',  'color' => '#E5484D'],
     ],
 
     'task_types' => [
-        'feature'     => ['label' => 'فیچر',  'color' => '#5B5BD6'],
-        'bug'         => ['label' => 'باگ',   'color' => '#E5484D'],
+        'feature' => ['label' => 'فیچر',  'color' => '#5B5BD6'],
+        'bug' => ['label' => 'باگ',   'color' => '#E5484D'],
         'improvement' => ['label' => 'بهبود', 'color' => '#12A594'],
-        'design'      => ['label' => 'طراحی', 'color' => '#D6409F'],
-        'content'     => ['label' => 'محتوا', 'color' => '#F5A524'],
+        'design' => ['label' => 'طراحی', 'color' => '#D6409F'],
+        'content' => ['label' => 'محتوا', 'color' => '#F5A524'],
     ],
 
     'project_statuses' => [
         'active' => ['label' => 'فعال',      'color' => '#2FB67C'],
         'paused' => ['label' => 'متوقف',     'color' => '#F5A524'],
-        'done'   => ['label' => 'تمام‌شده', 'color' => '#8B8BA3'],
+        'done' => ['label' => 'تمام‌شده', 'color' => '#8B8BA3'],
     ],
 
     /*
     | لینک‌ها: host برای تشخیص خودکار نوع از روی URL
     */
     'link_types' => [
-        'figma'   => ['label' => 'Figma',   'hosts' => ['figma.com']],
-        'repo'    => ['label' => 'ریپازیتوری', 'hosts' => ['github.com', 'gitlab.com', 'bitbucket.org']],
+        'figma' => ['label' => 'Figma',   'hosts' => ['figma.com']],
+        'repo' => ['label' => 'ریپازیتوری', 'hosts' => ['github.com', 'gitlab.com', 'bitbucket.org']],
         'staging' => ['label' => 'Staging', 'hosts' => []],
-        'other'   => ['label' => 'سایر',    'hosts' => []],
+        'other' => ['label' => 'سایر',    'hosts' => []],
     ],
 
     /*

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Ability;
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use App\Enums\TaskType;
@@ -176,10 +177,10 @@ class Task extends Model
             ]);
     }
 
-    /** مدیر همه را می‌بیند، عضو فقط تسک‌های پروژه‌های خودش را */
+    /** با دسترسی «دیدن همه‌ی پروژه‌ها» همه را می‌بیند، وگرنه فقط تسک‌های پروژه‌های عضویت */
     public function scopeVisibleTo(Builder $query, User $user): Builder
     {
-        if ($user->isAdmin()) {
+        if ($user->can(Ability::ProjectsViewAll->value)) {
             return $query;
         }
 
