@@ -34,6 +34,7 @@
     @keydown.escape.window="$store.sidebar.closeMobile()"
 >
 <livewire:global-search />
+<x-ui.confirm-dialog />
 
 @livewireScripts
 

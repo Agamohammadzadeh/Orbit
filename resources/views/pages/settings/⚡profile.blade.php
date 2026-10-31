@@ -9,7 +9,8 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-new #[Title('پروفایل من')] class extends Component {
+new #[Title('پروفایل من')]
+class extends Component {
     use WithFileUploads;
 
     public string $name = '';
@@ -56,7 +57,7 @@ new #[Title('پروفایل من')] class extends Component {
     {
         try {
             $this->validate(
-                ['avatar' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:'.config('orbit.avatars.max_kb')]],
+                ['avatar' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:' . config('orbit.avatars.max_kb')]],
                 [
                     'avatar.image' => 'فایل باید تصویر باشد.',
                     'avatar.mimes' => 'فقط JPG، PNG و WebP قبول است.',
@@ -171,7 +172,7 @@ new #[Title('پروفایل من')] class extends Component {
             class="flex items-center gap-2.5 rounded-control border border-success/30 bg-success/10 px-3.5 py-2.5 text-sm text-success"
             role="status"
         >
-            <x-ui.icon name="check" class="size-4.5" />
+            <x-ui.icon name="check" class="size-4.5"/>
             {{ $message }}
         </div>
     @endif
@@ -180,38 +181,55 @@ new #[Title('پروفایل من')] class extends Component {
         {{-- ستون اول: خلاصه‌ی حساب و دسترسی‌ها --}}
         <div class="space-y-6">
             <div class="card p-6 text-center">
-                <div class="relative mx-auto w-fit">
-                    <x-ui.avatar :user="$user" :size="96" />
+                <div class="mx-auto w-fit">
+                    <x-ui.avatar :user="$user" :size="96"/>
+                </div>
 
+                <div class="mt-4 flex items-center justify-center gap-2">
+                    {{-- تغییر عکس --}}
                     <label
-                        class="absolute -bottom-1 -end-1 flex size-9 cursor-pointer items-center justify-center rounded-full border border-line bg-surface text-muted shadow-card transition focus-within:ring-2 focus-within:ring-primary hover:text-primary"
-                        title="تغییر عکس"
-                    >
-                        <x-ui.icon name="camera" class="size-4.5" wire:loading.remove wire:target="avatar" />
-                        <svg wire:loading wire:target="avatar" class="size-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".25" stroke-width="3" />
-                            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                        class="inline-flex h-9 cursor-pointer items-center gap-2 rounded-control border border-line px-3 text-sm font-medium transition focus-within:ring-2 focus-within:ring-primary hover:border-primary/40 hover:text-primary">
+                        <x-ui.icon name="camera" class="size-4.5" wire:loading.remove wire:target="avatar"/>
+                        <svg wire:loading wire:target="avatar" class="size-4 animate-spin" viewBox="0 0 24 24"
+                             fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".25" stroke-width="3"/>
+                            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3"
+                                  stroke-linecap="round"/>
                         </svg>
-                        <input type="file" wire:model="avatar" accept="image/png,image/jpeg,image/webp" class="sr-only" />
-                        <span class="sr-only">تغییر عکس پروفایل</span>
+                        {{ $user->avatar_path ? 'تغییر عکس' : 'افزودن عکس' }}
+                        <input type="file" wire:model="avatar" accept="image/png,image/jpeg,image/webp"
+                               class="sr-only"/>
                     </label>
+
+                    {{-- حذف عکس (فقط وقتی عکس دارد) --}}
+                    @if ($user->avatar_path)
+                        <button
+                            type="button"
+                            @click="$store.confirm.ask({
+                                title: 'حذف عکس پروفایل',
+                                message: 'عکست حذف می‌شود و به‌جایش حروف اول نامت نشان داده می‌شود.',
+                                confirmLabel: 'حذف عکس',
+                                tone: 'danger',
+                                action: () => $wire.removeAvatar(),
+                            })"
+                            class="inline-flex h-9 items-center gap-2 rounded-control border border-line px-3 text-sm font-medium text-muted transition hover:border-danger/40 hover:bg-danger/10 hover:text-danger cursor-pointer"
+                        >
+                            <x-ui.icon name="trash" class="size-4.5"/>
+                            حذف
+                        </button>
+                    @endif
                 </div>
 
                 @error('avatar')
                 <p class="mt-3 text-sm text-danger">{{ $message }}</p>
                 @enderror
 
-                @if ($user->avatar_path)
-                    <button
-                        type="button"
-                        wire:click="removeAvatar"
-                        wire:confirm="عکس پروفایل حذف شود؟"
-                        class="mt-3 text-sm text-muted transition hover:text-danger"
-                    >حذف عکس</button>
-                @endif
+                <p class="mt-2 text-xs text-muted">JPG، PNG یا WebP،
+                    حداکثر {{ (int) (config('orbit.avatars.max_kb') / 1024) }} مگابایت</p>
 
                 <h2 class="mt-4 text-lg font-bold">{{ $user->name }}</h2>
-                <span class="mt-1.5 inline-block rounded-full bg-primary-soft px-2.5 py-0.5 text-xs font-medium text-primary">{{ $user->roleLabel() }}</span>
+                <span
+                    class="mt-1.5 inline-block rounded-full bg-primary-soft px-2.5 py-0.5 text-xs font-medium text-primary">{{ $user->roleLabel() }}</span>
                 <div dir="ltr" class="mt-2 truncate text-sm text-muted">{{ $user->email }}</div>
 
                 <dl class="mt-5 space-y-2.5 border-t border-line pt-5 text-sm">
@@ -236,9 +254,9 @@ new #[Title('پروفایل من')] class extends Component {
                         @php $allowed = $user->can($ability->value); @endphp
                         <li class="flex items-center gap-2.5 text-sm {{ $allowed ? '' : 'text-muted' }}">
                             @if ($allowed)
-                                <x-ui.icon name="check" class="size-4.5 text-success" />
+                                <x-ui.icon name="check" class="size-4.5 text-success"/>
                             @else
-                                <x-ui.icon name="x" class="size-4.5 text-muted/60" />
+                                <x-ui.icon name="x" class="size-4.5 text-muted/60"/>
                             @endif
                             {{ $ability->label() }}
                         </li>
@@ -290,9 +308,11 @@ new #[Title('پروفایل من')] class extends Component {
 
                 <div class="flex justify-end">
                     <button type="submit" class="btn-primary" wire:loading.attr="disabled" wire:target="saveProfile">
-                        <svg wire:loading wire:target="saveProfile" class="size-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".25" stroke-width="3" />
-                            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                        <svg wire:loading wire:target="saveProfile" class="size-4 animate-spin" viewBox="0 0 24 24"
+                             fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".25" stroke-width="3"/>
+                            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3"
+                                  stroke-linecap="round"/>
                         </svg>
                         ذخیره
                     </button>
@@ -303,7 +323,8 @@ new #[Title('پروفایل من')] class extends Component {
             <form wire:submit="updatePassword" class="card space-y-5 p-6" x-data="{ show: false }" novalidate>
                 <div>
                     <h2 class="text-base font-bold">تغییر رمز عبور</h2>
-                    <p class="mt-0.5 text-sm text-muted">رمز جدید باید حداقل ۸ کاراکتر و شامل حرف و عدد باشد. بعد از تغییر، از بقیه‌ی دستگاه‌ها خارج می‌شوی.</p>
+                    <p class="mt-0.5 text-sm text-muted">رمز جدید باید حداقل ۸ کاراکتر و شامل حرف و عدد باشد. بعد از
+                        تغییر، از بقیه‌ی دستگاه‌ها خارج می‌شوی.</p>
                 </div>
 
                 <div class="space-y-1.5">
@@ -354,14 +375,16 @@ new #[Title('پروفایل من')] class extends Component {
 
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <label class="flex cursor-pointer select-none items-center gap-2 text-sm text-muted">
-                        <input type="checkbox" x-model="show" class="size-4 rounded border-line accent-primary" />
+                        <input type="checkbox" x-model="show" class="size-4 rounded border-line accent-primary"/>
                         نمایش رمزها
                     </label>
 
                     <button type="submit" class="btn-primary" wire:loading.attr="disabled" wire:target="updatePassword">
-                        <svg wire:loading wire:target="updatePassword" class="size-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".25" stroke-width="3" />
-                            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                        <svg wire:loading wire:target="updatePassword" class="size-4 animate-spin" viewBox="0 0 24 24"
+                             fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".25" stroke-width="3"/>
+                            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3"
+                                  stroke-linecap="round"/>
                         </svg>
                         تغییر رمز
                     </button>
@@ -389,7 +412,7 @@ new #[Title('پروفایل من')] class extends Component {
                                 : 'border-line text-muted hover:text-fg'"
                             class="flex h-11 items-center justify-center gap-2 rounded-control border text-sm font-medium transition"
                         >
-                            <x-ui.icon :name="$icon" class="size-4.5" />
+                            <x-ui.icon :name="$icon" class="size-4.5"/>
                             {{ $label }}
                         </button>
                     @endforeach

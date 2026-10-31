@@ -241,3 +241,21 @@
 html.sb-collapsed {
     --sidebar-w: 4.5rem;
 }
+
+@utility btn-secondary {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-control border border-line bg-surface px-5 text-[0.9375rem] font-medium transition hover:bg-line/50 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+/* دکمه‌ی خطرناک (حذف و ...) */
+@utility btn-danger {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-control bg-danger px-5 text-[0.9375rem] font-semibold text-white transition hover:bg-danger/90 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+button:not(:disabled),
+[role="button"]:not(:disabled),
+summary,
+select:not(:disabled),
+input:where([type="checkbox"], [type="radio"], [type="file"]):not(:disabled),
+label:has(input:where([type="checkbox"], [type="radio"], [type="file"]):not(:disabled)) {
+    cursor: pointer;
+}

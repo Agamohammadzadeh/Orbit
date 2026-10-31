@@ -76,3 +76,60 @@ document.addEventListener('livewire:navigated', () => {
     store.closeMobile();
     document.documentElement.classList.toggle('sb-collapsed', store.collapsed);
 });
+
+
+
+// ---------------- دیالوگ تأیید سراسری ----------------
+// استفاده در Blade (داخل هر کامپوننت Livewire):
+//   @click="$store.confirm.ask({
+//       title: 'حذف تسک',
+//       message: 'این کار قابل بازگشت نیست.',
+//       confirmLabel: 'حذف',
+//       tone: 'danger',                       // danger | primary
+//       action: () => $wire.deleteTask(),     // تابعی که بعد از تأیید اجرا می‌شود
+//   })"
+document.addEventListener('alpine:init', () => {
+    window.Alpine.store('confirm', {
+        open: false,
+        busy: false,
+        title: '',
+        message: '',
+        confirmLabel: 'تأیید',
+        cancelLabel: 'انصراف',
+        tone: 'danger',
+        _action: null,
+
+        ask({ title, message = '', confirmLabel = 'تأیید', cancelLabel = 'انصراف', tone = 'danger', action }) {
+            Object.assign(this, {
+                title,
+                message,
+                confirmLabel,
+                cancelLabel,
+                tone,
+                _action: action,
+                busy: false,
+                open: true,
+            });
+        },
+
+        // تا تمام شدن عملیات (مثلاً درخواست Livewire) دیالوگ باز می‌ماند و دکمه spinner دارد
+        async accept() {
+            if (this.busy) return;
+            this.busy = true;
+
+            try {
+                await this._action?.();
+            } finally {
+                this.busy = false;
+                this.open = false;
+                this._action = null;
+            }
+        },
+
+        cancel() {
+            if (this.busy) return;
+            this.open = false;
+            this._action = null;
+        },
+    });
+});
