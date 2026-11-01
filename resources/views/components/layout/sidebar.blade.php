@@ -1,7 +1,7 @@
 @php
     $nav = [
         ['route' => 'dashboard', 'match' => 'dashboard', 'icon' => 'home', 'label' => 'داشبورد'],
-        ['route' => 'dashboard' /*'projects.index'*/, 'match' => 'projects.*', 'icon' => 'folder', 'label' => 'پروژه‌ها'],
+        ['route' => 'projects.index', 'match' => 'projects.*', 'icon' => 'folder', 'label' => 'پروژه‌ها'],
         ['route' => 'dashboard' /*'calendar'*/, 'match' => 'calendar', 'icon' => 'calendar', 'label' => 'تقویم'],
         ['route' => 'dashboard' /*'reports'*/, 'match' => 'reports', 'icon' => 'chart', 'label' => 'گزارش‌ها'],
     ];
