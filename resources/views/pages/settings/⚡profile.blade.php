@@ -163,7 +163,19 @@ class extends Component {
     </div>
 
     {{-- پیام موفقیت --}}
-    <x-ui.flash :message="$flash" :error="$flashIsError" wire:key="flash-{{ $flashId }}" />
+    @if ($message)
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 4000)"
+            x-show="show"
+            x-transition.opacity
+            class="flex items-center gap-2.5 rounded-control border border-success/30 bg-success/10 px-3.5 py-2.5 text-sm text-success"
+            role="status"
+        >
+            <x-ui.icon name="check" class="size-4.5"/>
+            {{ $message }}
+        </div>
+    @endif
 
     <div class="grid items-start gap-6 lg:grid-cols-3">
         {{-- ستون اول: خلاصه‌ی حساب و دسترسی‌ها --}}
