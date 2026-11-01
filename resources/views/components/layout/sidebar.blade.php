@@ -87,8 +87,7 @@
                             </li>
                             <li>
                                 <x-ui.nav-item
-{{--                                    :href="route('team.roles')" --}}
-                                    href="#"
+                                    :href="route('team.roles')"
                                     icon="shield"
                                     label="نقش‌ها و دسترسی‌ها"
                                     :active="request()->routeIs('team.roles')"

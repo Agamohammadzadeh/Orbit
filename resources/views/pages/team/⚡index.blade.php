@@ -313,8 +313,7 @@ new #[Title('اعضای تیم')] class extends Component {
 
         <div class="flex items-center gap-2.5">
             <a
-{{--                href="{{ route('team.roles') }}" --}}
-                href="#"
+                href="{{ route('team.roles') }}"
                 :navigate
                 class="btn-secondary"
             >
@@ -329,24 +328,7 @@ new #[Title('اعضای تیم')] class extends Component {
     </div>
 
     {{-- پیام --}}
-    @if ($flash)
-        <div
-            wire:key="flash-{{ $flashId }}"
-            x-data="{ show: true }"
-            x-init="setTimeout(() => show = false, 5000)"
-            x-show="show"
-            x-transition.opacity
-            @class([
-                'flex items-center gap-2.5 rounded-control border px-3.5 py-2.5 text-sm',
-                'border-danger/30 bg-danger/10 text-danger' => $flashIsError,
-                'border-success/30 bg-success/10 text-success' => ! $flashIsError,
-            ])
-            role="status"
-        >
-            <x-ui.icon :name="$flashIsError ? 'alert-triangle' : 'check'" class="size-4.5" />
-            {{ $flash }}
-        </div>
-    @endif
+    <x-ui.flash :message="$flash" :error="$flashIsError" wire:key="flash-{{ $flashId }}" />
 
     {{-- فیلترها --}}
     <div class="flex flex-wrap items-center gap-3">
