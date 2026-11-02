@@ -35,6 +35,8 @@
 >
 <livewire:global-search />
 <x-ui.confirm-dialog />
+<x-ui.toast />
+<livewire:project.task-form />
 
 @livewireScripts
 

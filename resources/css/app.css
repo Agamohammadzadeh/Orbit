@@ -259,3 +259,11 @@ input:where([type="checkbox"], [type="radio"], [type="file"]):not(:disabled),
 label:has(input:where([type="checkbox"], [type="radio"], [type="file"]):not(:disabled)) {
     cursor: pointer;
 }
+
+.sortable-ghost {
+    opacity: 0.4;
+}
+.sortable-drag {
+    box-shadow: var(--shadow-pop);
+    rotate: 2deg;
+}

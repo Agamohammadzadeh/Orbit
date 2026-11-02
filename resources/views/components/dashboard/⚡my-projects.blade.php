@@ -25,8 +25,7 @@ new class extends Component {
     <div class="flex items-center justify-between border-b border-line px-5 py-4">
         <h2 class="text-base font-bold">پروژه‌های من</h2>
         <a
-{{--            href="{{ route('projects.index') }}"--}}
-            href="#"
+            href="{{ route('projects.index') }}"
             wire:navigate
             class="text-sm text-muted transition hover:text-primary"
         >
@@ -49,8 +48,7 @@ new class extends Component {
 
                 <li wire:key="project-{{ $project->id }}">
                     <a
-{{--                        href="{{ route('projects.show', $project) }}" --}}
-                        href="#"
+                        href="{{ route('projects.show', $project) }}"
                         wire:navigate
                         class="block px-5 py-4 transition hover:bg-line/30"
                     >

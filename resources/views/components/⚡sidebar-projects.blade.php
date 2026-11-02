@@ -28,8 +28,7 @@ new class extends Component {
         <div class="mb-2 flex items-center justify-between px-3 lg:sb-collapsed:hidden">
             <p class="text-xs font-medium text-muted">پروژه‌های اخیر</p>
             <a
-{{--                href="{{ route('projects.index') }}" --}}
-                href="#"
+                href="{{ route('projects.index') }}"
                 wire:navigate
                 class="text-xs text-muted transition hover:text-primary"
             >همه</a>
@@ -41,8 +40,7 @@ new class extends Component {
                 @php $active = $current instanceof \App\Models\Project && $current->id === $project->id; @endphp
                 <li wire:key="sidebar-project-{{ $project->id }}">
                     <a
-                        href="#"
-{{--                        href="{{ route('projects.show', $project) }}"--}}
+                        href="{{ route('projects.show', $project) }}"
                         wire:navigate
                         title="{{ $project->name }}"
                         @if ($active) aria-current="page" @endif

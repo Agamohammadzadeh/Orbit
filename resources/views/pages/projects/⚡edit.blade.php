@@ -24,5 +24,5 @@ new #[Title('ویرایش پروژه')] class extends Component {
         <p class="mt-1 text-sm text-muted">{{ $project->name }}</p>
     </div>
 
-    <livewire:projects.form :project="$project" />
+    <livewire:project.form :project="$project" />
 </div>

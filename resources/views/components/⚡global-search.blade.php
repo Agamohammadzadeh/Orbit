@@ -148,8 +148,7 @@ new class extends Component {
                             @foreach ($this->projects as $project)
                                 <li wire:key="search-project-{{ $project->id }}">
                                     <a
-{{--                                        href="{{ route('projects.show', $project) }}"--}}
-                                        href="#"
+                                        href="{{ route('projects.show', $project) }}"
                                         wire:navigate
                                         data-result
                                         @click="open = false"

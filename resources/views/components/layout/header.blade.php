@@ -26,7 +26,19 @@
     <div class="ms-auto flex items-center gap-1.5">
         {{-- تسک جدید (فقط با دسترسی نوشتن) --}}
         @can('tasks.write')
-            <button type="button" @click="$dispatch('open-task-form')" class="btn-primary h-9! px-3.5! text-sm!">
+            @php
+                $routeProject = request()->route('project');
+                $routeTask = request()->route('task');
+                $headerProjectId = $routeProject instanceof \App\Models\Project
+                    ? $routeProject->id
+                    : ($routeTask instanceof \App\Models\Task ? $routeTask->project_id : null);
+            @endphp
+
+            <button
+                type="button"
+                @click="Livewire.dispatch('open-task-form', { projectId: @js($headerProjectId) })"
+                class="btn-primary h-9! px-3.5! text-sm!"
+            >
                 <x-ui.icon name="plus" class="size-4" />
                 <span class="max-sm:hidden">تسک جدید</span>
                 <span class="sr-only sm:hidden">تسک جدید</span>

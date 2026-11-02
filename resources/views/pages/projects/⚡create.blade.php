@@ -16,5 +16,5 @@ new #[Title('پروژه‌ی جدید')] class extends Component {};
         <p class="mt-1 text-sm text-muted">اطلاعات پایه را وارد کن و اعضا را انتخاب کن. بقیه را بعداً داخل پروژه تنظیم می‌کنی.</p>
     </div>
 
-    <livewire:projects.form />
+    <livewire:project.form />
 </div>
