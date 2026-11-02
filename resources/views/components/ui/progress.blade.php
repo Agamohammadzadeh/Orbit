@@ -10,7 +10,7 @@
 @endphp
 
 <div
-    {{ $attributes->class('h-1.5 w-full overflow-hidden rounded-full bg-line') }}
+    {{ $attributes->class('h-1.5 w-full  overflow-hidden rounded-full bg-line') }}
     role="progressbar"
     aria-valuenow="{{ $v }}"
     aria-valuemin="0"

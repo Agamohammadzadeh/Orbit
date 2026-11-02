@@ -108,8 +108,7 @@ new class extends Component {
                         @php $days = (int) abs(today()->diffInDays($task->due_date, false)); @endphp
                         <li wire:key="overdue-{{ $task->id }}">
                             <a
-{{--                                href="{{ route('tasks.show', $task) }}" --}}
-                                href="#"
+                                href="{{ route('tasks.show', $task) }}"
                                 wire:navigate
                                 class="flex items-center gap-3 px-5 py-3.5 transition hover:bg-line/30"
                             >

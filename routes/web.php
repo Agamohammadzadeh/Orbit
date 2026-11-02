@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttachmentDownloadController;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,12 +23,18 @@ Route::middleware('auth')->group(function () {
         ->middleware('can:view,project')
         ->name('projects.show');
 
+    // Task
+    Route::livewire('/tasks/{task}', 'pages::tasks.show')->name('tasks.show');
+
     Route::livewire('/settings/profile', 'pages::settings.profile')->name('settings.profile');
 
     Route::middleware('can:users.manage')->prefix('team')->group(function () {
         Route::livewire('/', 'pages::team.index')->name('team');
         Route::livewire('/roles', 'pages::team.roles')->name('team.roles');
     });
+
+    Route::get('/attachments/{attachment}', AttachmentDownloadController::class)
+        ->name('attachments.download');
 
     Route::post('/logout', function () {
         Auth::logout();

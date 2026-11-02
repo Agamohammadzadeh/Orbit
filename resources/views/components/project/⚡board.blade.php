@@ -224,8 +224,7 @@ new class extends Component {
                                 @endif
 
                                 <a
-{{--                                    href="{{ route('tasks.show', $task) }}"--}}
-                                    href="#"
+                                    href="{{ route('tasks.show', $task) }}"
                                     wire:navigate
                                     @click.stop
                                     @class([

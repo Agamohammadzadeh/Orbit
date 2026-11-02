@@ -175,8 +175,7 @@ new class extends Component {
                             @foreach ($this->tasks as $task)
                                 <li wire:key="search-task-{{ $task->id }}">
                                     <a
-{{--                                        href="{{ route('tasks.show', $task) }}"--}}
-                                        href="#"
+                                        href="{{ route('tasks.show', $task) }}"
                                         wire:navigate
                                         data-result
                                         @click="open = false"

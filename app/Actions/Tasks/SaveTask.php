@@ -6,8 +6,8 @@ use App\Enums\TaskStatus;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\TaskAssignedNotification;
 use Illuminate\Support\Facades\DB;
-use Throwable;
 
 class SaveTask
 {
@@ -17,11 +17,13 @@ class SaveTask
      * @param  User  $actor  :?string,status:string,priority:string,type:string,assignee_id:?int,phase_id:?int,sprint_id:?int,due_date:?string,estimate_minutes:?int}  $data
      * @param  array<int,int>  $labelIds
      *
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function handle(User $actor, Project $project, ?Task $task, array $data, array $labelIds): Task
     {
-        return DB::transaction(function () use ($actor, $project, $task, $data, $labelIds) {
+        $oldAssignee = $task?->assignee_id;
+
+        $task = DB::transaction(function () use ($actor, $project, $task, $data, $labelIds) {
             $status = TaskStatus::from($data['status']);
             unset($data['status']);
 
@@ -41,5 +43,13 @@ class SaveTask
 
             return $task;
         });
+
+        // اعلان ارجاع به مسئول جدید (به خودت اعلان نمی‌رسد)
+        $new = $task->assignee_id;
+        if ($new && $new !== $oldAssignee && $new !== $actor->id) {
+            User::query()->active()->find($new)?->notify(new TaskAssignedNotification($task, $actor));
+        }
+
+        return $task;
     }
 }

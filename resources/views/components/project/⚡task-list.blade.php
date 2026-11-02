@@ -193,8 +193,7 @@ new class extends Component {
 
                         <div class="min-w-0">
                             <a
-                                {{--                                href="{{ route('tasks.show', $task) }}" --}}
-                                href="#"
+                                href="{{ route('tasks.show', $task) }}"
                                 wire:navigate
                                 @class(['block truncate text-sm font-medium transition hover:text-primary', 'text-muted line-through' => $done])
                             >
