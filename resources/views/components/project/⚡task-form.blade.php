@@ -125,7 +125,7 @@ new class extends Component {
      * @param  ?int  $projectId  پروژه‌ی جاری؛ اگر نباشد، کاربر خودش انتخاب می‌کند
      */
     #[On('open-task-form')]
-    public function openCreate(?string $status = null, ?int $projectId = null): void
+    public function openCreate(?string $status = null, ?int $projectId = null, ?string $dueDate = null): void
     {
         $allowed = $this->projects;
 
@@ -146,6 +146,11 @@ new class extends Component {
 
         if ($status && TaskStatus::tryFrom($status)) {
             $this->status = $status;
+        }
+
+        // ددلاین از پیش‌تعیین‌شده (مثلاً روز انتخاب‌شده در تقویم)
+        if ($dueDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $dueDate)) {
+            $this->dueDate = $dueDate;
         }
 
         $this->show = true;

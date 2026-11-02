@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     // Task
     Route::livewire('/tasks/{task}', 'pages::tasks.show')->name('tasks.show');
 
+    Route::livewire('/calendar', 'pages::calendar.index')->name('calendar');
+
     Route::livewire('/settings/profile', 'pages::settings.profile')->name('settings.profile');
 
     Route::middleware('can:users.manage')->prefix('team')->group(function () {
