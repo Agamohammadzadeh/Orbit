@@ -1,4 +1,4 @@
-@props(['label', 'value', 'icon', 'tone' => 'default', 'active' => false, 'tag' => 'button'])
+@props(['label', 'value', 'icon', 'tone' => 'default', 'active' => false, 'tag' => 'button', 'hint' => null, 'hintTone' => 'muted'])
 
 @php
     $iconTone = match ($tone) {
@@ -20,10 +20,18 @@
 ]) }}
 >
 <span class="flex size-11 shrink-0 items-center justify-center rounded-control {{ $iconTone }}">
-        <x-ui.icon :name="$icon" class="size-5" />
+        <x-ui.icon :name="$icon" class="size-5"/>
     </span>
 <span class="min-w-0">
-        <span class="tabular block text-2xl font-bold leading-none">{{ $value }}</span>
+        <span class="tabular block text-xl font-bold leading-none">{{ $value }}</span>
         <span class="mt-1.5 block truncate text-sm text-muted">{{ $label }}</span>
+        @if ($hint)
+            <span @class([
+                'mt-0.5 block truncate text-xs',
+                'text-success' => $hintTone === 'success',
+                'text-danger' => $hintTone === 'danger',
+                'text-muted' => $hintTone === 'muted',
+            ])>{{ $hint }}</span>
+       @endif
     </span>
 </{{ $tag }}>

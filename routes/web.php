@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttachmentDownloadController;
+use App\Http\Controllers\ReportExportController;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/tasks/{task}', 'pages::tasks.show')->name('tasks.show');
 
     Route::livewire('/calendar', 'pages::calendar.index')->name('calendar');
+
+    Route::livewire('/reports', 'pages::reports.index')->name('reports');
+    Route::get('/reports/export', ReportExportController::class)->name('reports.export');
 
     Route::livewire('/settings/profile', 'pages::settings.profile')->name('settings.profile');
 

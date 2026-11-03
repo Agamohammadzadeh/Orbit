@@ -3,7 +3,7 @@
         ['route' => 'dashboard', 'match' => 'dashboard', 'icon' => 'home', 'label' => 'داشبورد'],
         ['route' => 'projects.index', 'match' => 'projects.*', 'icon' => 'folder', 'label' => 'پروژه‌ها'],
         ['route' => 'calendar', 'match' => 'calendar', 'icon' => 'calendar', 'label' => 'تقویم'],
-        ['route' => 'dashboard' /*'reports'*/, 'match' => 'reports', 'icon' => 'chart', 'label' => 'گزارش‌ها'],
+        ['route' => 'reports', 'match' => 'reports', 'icon' => 'chart', 'label' => 'گزارش‌ها'],
     ];
 @endphp
 
