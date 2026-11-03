@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Notifications\MentionedInCommentNotification;
 use App\Notifications\NewCommentNotification;
 use App\Support\RichText;
+use App\Support\Notifier;
 
 class AddComment
 {
@@ -40,11 +41,15 @@ class AddComment
             ->reject(fn ($id) => $id === $actor->id || $mentioned->contains($id))
             ->values();
 
-        User::query()->active()->whereIn('id', $mentioned)->get()
-            ->each->notify(new MentionedInCommentNotification($task, $actor));
+        Notifier::send(
+            User::query()->active()->whereIn('id', $mentioned)->get(),
+            new MentionedInCommentNotification($task, $actor),
+        );
 
-        User::query()->active()->whereIn('id', $others)->get()
-            ->each->notify(new NewCommentNotification($task, $actor));
+        Notifier::send(
+            User::query()->active()->whereIn('id', $others)->get(),
+            new NewCommentNotification($task, $actor),
+        );
 
         return $comment;
     }

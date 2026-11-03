@@ -2,28 +2,32 @@
 
 namespace App\Notifications;
 
+use App\Enums\NotificationType;
 use App\Models\Task;
 use App\Models\User;
-use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 
-class TaskAssignedNotification extends Notification
+class TaskAssignedNotification extends OrbitNotification
 {
     public function __construct(public Task $task, public User $actor) {}
 
-    public function via(object $notifiable): array
+    public function type(): NotificationType
     {
-        return ['database'];
+        return NotificationType::TaskAssigned;
     }
 
-    public function toArray(object $notifiable): array
+    public function message(): string
     {
-        return [
-            'type' => 'task_assigned',
-            'message' => "{$this->actor->name} تسک «".Str::limit($this->task->title, 60).'» را به تو ارجاع داد.',
-            'url' => route('tasks.show', $this->task, false),
-            'task_id' => $this->task->id,
-            'actor_id' => $this->actor->id,
-        ];
+        return "{$this->actor->name} تسک «".Str::limit($this->task->title, 60).'» را به تو ارجاع داد.';
+    }
+
+    public function path(): string
+    {
+        return route('tasks.show', $this->task, false);
+    }
+
+    protected function extra(): array
+    {
+        return ['task_id' => $this->task->id, 'actor_id' => $this->actor->id];
     }
 }

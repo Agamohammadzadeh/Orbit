@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component {
@@ -16,19 +17,26 @@ new class extends Component {
         return auth()->user()->unreadNotifications()->count();
     }
 
+    #[On('notifications-updated')]
+    public function refresh(): void
+    {
+        unset($this->items, $this->unread);
+    }
+
     /** اعلان را خوانده می‌کند و به مقصدش می‌رود */
     public function open(string $id): void
     {
         $notification = auth()->user()->notifications()->whereKey($id)->first();
 
-        if (! $notification) {
+        if (!$notification) {
             return;
         }
 
         $notification->markAsRead();
 
         $url = $notification->data['url'] ?? null;
-        $safe = is_string($url) && str_starts_with($url, '/') ? $url : "#" /*route('notifications')*/;
+        $safe = is_string($url) && str_starts_with($url, '/') ? $url : "#" /*route('notifications')*/
+        ;
 
         $this->redirect($safe, navigate: true);
     }
@@ -56,16 +64,19 @@ new class extends Component {
         <h2 class="flex items-center gap-2 text-base font-bold">
             اعلان‌ها
             @if ($this->unread > 0)
-                <span class="tabular rounded-full bg-accent px-2 py-0.5 text-[0.6875rem] font-bold leading-none text-white">{{ $this->unread }}</span>
+                <span
+                    class="tabular rounded-full bg-accent px-2 py-0.5 text-[0.6875rem] font-bold leading-none text-white">{{ $this->unread }}</span>
             @endif
         </h2>
 
         <div class="flex items-center gap-3 text-sm">
             @if ($this->unread > 0)
-                <button type="button" wire:click="markAllRead" class="text-muted transition hover:text-primary">خوانده شد</button>
+                <button type="button" wire:click="markAllRead" class="text-muted transition hover:text-primary">خوانده
+                    شد
+                </button>
             @endif
             <a
-{{--                href="{{ route('notifications') }}" --}}
+                {{--                href="{{ route('notifications') }}" --}}
                 href="#"
                 wire:navigate
                 class="text-muted transition hover:text-primary"
@@ -94,7 +105,7 @@ new class extends Component {
                             'bg-primary-soft text-primary' => $unread,
                             'bg-line/60 text-muted' => ! $unread,
                         ])>
-                            <x-ui.icon :name="$icons[$n->data['type'] ?? ''] ?? 'bell'" class="size-4" />
+                            <x-ui.icon :name="$icons[$n->data['type'] ?? ''] ?? 'bell'" class="size-4"/>
                         </span>
 
                         <span class="min-w-0 flex-1">

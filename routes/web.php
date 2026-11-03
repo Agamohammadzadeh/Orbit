@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
         Route::livewire('/clients', 'pages::clients.index')->name('clients');
     });
 
+    Route::livewire('/notifications', 'pages::notifications.index')->name('notifications');
+
     Route::get('/attachments/{attachment}', AttachmentDownloadController::class)
         ->name('attachments.download');
 

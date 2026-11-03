@@ -37,6 +37,7 @@ class Task extends Model
         'estimate_minutes',
         'position',
         'completed_at',
+        'deadline_reminded_for',
     ];
 
     protected function casts(): array

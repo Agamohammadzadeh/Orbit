@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Notifications\TaskAssignedNotification;
 use Illuminate\Support\Facades\DB;
+use App\Support\Notifier;
 
 class SaveTask
 {
@@ -47,7 +48,11 @@ class SaveTask
         // اعلان ارجاع به مسئول جدید (به خودت اعلان نمی‌رسد)
         $new = $task->assignee_id;
         if ($new && $new !== $oldAssignee && $new !== $actor->id) {
-            User::query()->active()->find($new)?->notify(new TaskAssignedNotification($task, $actor));
+            $assignee = User::query()->active()->find($new);
+
+            if ($assignee) {
+                Notifier::send($assignee, new TaskAssignedNotification($task, $actor));
+            }
         }
 
         return $task;
