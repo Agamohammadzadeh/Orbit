@@ -40,5 +40,23 @@
                 </button>
             @endif
         @endcan
+
+        @can('delete' , $p)
+            <button
+                type="button"
+                role="menuitem"
+                @click="$store.confirm.ask({
+                        title: @js('حذف «'.$p->name.'»'),
+                        message: 'پروژه و دسترسی های آن به طور کامل حذف می‌شود و امکان بازگردانی آن وجود نخواهد داشت.',
+                        confirmLabel: 'حذف کن',
+                        tone: 'danger',
+                        action: () => $wire.delete({{ $p->id }}),
+                    })"
+                class="flex h-9 w-full items-center gap-2.5 rounded-control px-3 text-start text-sm transition hover:bg-red-500/10 hover:text-prio-urgent hover:[&>svg]:stroke-prio-urgent focus:outline-none focus-visible:bg-line/50 "
+            >
+                <x-ui.icon name="trash" class="size-4.5 text-muted" />
+                حذف
+            </button>
+        @endcan
     </x-ui.dropdown>
 </div>

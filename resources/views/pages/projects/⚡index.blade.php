@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Projects\DeleteProject;
 use App\Actions\Projects\SetProjectArchived;
 use App\Enums\ProjectStatus;
 use App\Models\Project;
@@ -10,7 +11,8 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-new #[Title('پروژه‌ها')] class extends Component {
+new #[Title('پروژه‌ها')]
+class extends Component {
     use WithPagination;
 
     #[Url(as: 'q')]
@@ -40,13 +42,13 @@ new #[Title('پروژه‌ها')] class extends Component {
 
     public function mount(): void
     {
-        if (! in_array($this->scope, ['active', 'archived'], true)) {
+        if (!in_array($this->scope, ['active', 'archived'], true)) {
             $this->scope = 'active';
         }
-        if (! in_array($this->sort, ['recent', 'name', 'deadline'], true)) {
+        if (!in_array($this->sort, ['recent', 'name', 'deadline'], true)) {
             $this->sort = 'recent';
         }
-        if (! in_array($this->layout, ['grid', 'list'], true)) {
+        if (!in_array($this->layout, ['grid', 'list'], true)) {
             $this->layout = 'grid';
         }
         if (ProjectStatus::tryFrom($this->status) === null) {
@@ -80,15 +82,15 @@ new #[Title('پروژه‌ها')] class extends Component {
 
         $query = Project::query()
             ->visibleTo(auth()->user())
-            ->when($this->scope === 'archived', fn ($q) => $q->archived(), fn ($q) => $q->notArchived())
-            ->when($status, fn ($q) => $q->withStatus($status))
-            ->when($term !== '', fn ($q) => $q->where(
-                fn ($w) => $w->whereLike('name', "%{$term}%")
-                    ->orWhereHas('client', fn ($c) => $c->whereLike('name', "%{$term}%"))
+            ->when($this->scope === 'archived', fn($q) => $q->archived(), fn($q) => $q->notArchived())
+            ->when($status, fn($q) => $q->withStatus($status))
+            ->when($term !== '', fn($q) => $q->where(
+                fn($w) => $w->whereLike('name', "%{$term}%")
+                    ->orWhereHas('client', fn($c) => $c->whereLike('name', "%{$term}%"))
             ))
             ->withProgress()
             ->withCount([
-                'tasks as overdue_count' => fn ($q) => $q
+                'tasks as overdue_count' => fn($q) => $q
                     ->where('status', '!=', 'done')
                     ->whereNotNull('due_date')
                     ->where('due_date', '<', today()->toDateString()),
@@ -155,6 +157,17 @@ new #[Title('پروژه‌ها')] class extends Component {
         unset($this->projects, $this->counts);
         $this->notify("پروژه‌ی «{$project->name}» به فهرست فعال برگشت.");
     }
+
+    public function delete(int $id): void
+    {
+        $project = Project::query()->findOrFail($id);
+        Gate::authorize('delete', $project);
+
+        (new DeleteProject())->handle($project);
+
+        unset($this->projects , $this->counts);
+        $this->notify("پروژه‌ی «{$project->name}» با موفقیت حذف شد.");
+    }
 };
 ?>
 
@@ -188,18 +201,19 @@ new #[Title('پروژه‌ها')] class extends Component {
 
         @can('create', \App\Models\Project::class)
             <a href="{{ route('projects.create') }}" wire:navigate class="btn-primary">
-                <x-ui.icon name="plus" class="size-4.5" />
+                <x-ui.icon name="plus" class="size-4.5"/>
                 پروژه‌ی جدید
             </a>
         @endcan
     </div>
 
-    <x-ui.flash :message="$flash" :error="$flashIsError" wire:key="flash-{{ $flashId }}" />
+    <x-ui.flash :message="$flash" :error="$flashIsError" wire:key="flash-{{ $flashId }}"/>
 
     {{-- فیلترها --}}
     <div class="flex flex-wrap items-center gap-3">
         {{-- فعال / آرشیو --}}
-        <div class="inline-flex rounded-control border border-line bg-surface p-1" role="group" aria-label="فعال یا آرشیو">
+        <div class="inline-flex rounded-control border border-line bg-surface p-1" role="group"
+             aria-label="فعال یا آرشیو">
             @foreach (['active' => 'فعال', 'archived' => 'آرشیو'] as $key => $text)
                 <button
                     type="button"
@@ -215,7 +229,8 @@ new #[Title('پروژه‌ها')] class extends Component {
         </div>
 
         <div class="relative min-w-56 flex-1 sm:max-w-xs">
-            <x-ui.icon name="search" class="pointer-events-none absolute start-3.5 top-1/2 size-4.5 -translate-y-1/2 text-muted" />
+            <x-ui.icon name="search"
+                       class="pointer-events-none absolute start-3.5 top-1/2 size-4.5 -translate-y-1/2 text-muted"/>
             <input
                 type="search"
                 wire:model.live.debounce.300ms="search"
@@ -225,19 +240,21 @@ new #[Title('پروژه‌ها')] class extends Component {
             />
         </div>
 
-        <x-ui.select wire:model.live="status" :options="$statusOptions" label="فیلتر وضعیت" class="w-44" />
-        <x-ui.select wire:model.live="sort" :options="$sortOptions" label="مرتب‌سازی" class="w-44" />
+        <x-ui.select wire:model.live="status" :options="$statusOptions" label="فیلتر وضعیت" class="w-44"/>
+        <x-ui.select wire:model.live="sort" :options="$sortOptions" label="مرتب‌سازی" class="w-44"/>
 
         @if ($hasFilters)
             <button
                 type="button"
                 wire:click="$set('search', ''); $set('status', '')"
                 class="text-sm text-muted transition hover:text-primary"
-            >پاک کردن فیلترها</button>
+            >پاک کردن فیلترها
+            </button>
         @endif
 
         {{-- نمای کارتی / ردیفی --}}
-        <div class="ms-auto inline-flex rounded-control border border-line bg-surface p-1" role="group" aria-label="نوع نمایش">
+        <div class="ms-auto inline-flex rounded-control border border-line bg-surface p-1" role="group"
+             aria-label="نوع نمایش">
             @foreach (['grid' => ['grid', 'کارتی'], 'list' => ['list', 'ردیفی']] as $key => [$icon, $text])
                 <button
                     type="button"
@@ -250,7 +267,7 @@ new #[Title('پروژه‌ها')] class extends Component {
                         'text-muted hover:text-fg' => $layout !== $key,
                     ])
                 >
-                    <x-ui.icon :name="$icon" class="size-4.5" />
+                    <x-ui.icon :name="$icon" class="size-4.5"/>
                 </button>
             @endforeach
         </div>
@@ -287,7 +304,8 @@ new #[Title('پروژه‌ها')] class extends Component {
                         $open = $p->tasks_count - $p->done_tasks_count;
                     @endphp
 
-                    <article wire:key="project-{{ $p->id }}" class="card relative flex flex-col p-5 transition hover:border-primary/40">
+                    <article wire:key="project-{{ $p->id }}"
+                             class="card relative flex flex-col p-5 transition hover:border-primary/40">
                         <div class="flex items-start gap-3">
                             <span
                                 class="flex size-10 shrink-0 items-center justify-center rounded-lg text-base font-bold text-white"
@@ -295,7 +313,8 @@ new #[Title('پروژه‌ها')] class extends Component {
                             >{{ mb_substr($p->name, 0, 1) }}</span>
 
                             <div class="min-w-0 flex-1">
-                                <a href="{{ route('projects.show', $p) }}" wire:navigate class="block truncate font-bold after:absolute after:inset-0">{{ $p->name }}</a>
+                                <a href="{{ route('projects.show', $p) }}" wire:navigate
+                                   class="block truncate font-bold after:absolute after:inset-0">{{ $p->name }}</a>
                                 <p class="mt-0.5 truncate text-sm text-muted">{{ $p->client?->name ?? 'بدون مشتری' }}</p>
                             </div>
 
@@ -303,28 +322,34 @@ new #[Title('پروژه‌ها')] class extends Component {
                         </div>
 
                         <div class="mt-4 flex items-center justify-between gap-3">
-                            <span class="inline-flex items-center gap-1.5 text-xs font-medium" style="color: {{ $p->status->color() }}">
-                                <span class="size-1.5 rounded-full" style="background-color: {{ $p->status->color() }}"></span>
+                            <span class="inline-flex items-center gap-1.5 text-xs font-medium"
+                                  style="color: {{ $p->status->color() }}">
+                                <span class="size-1.5 rounded-full"
+                                      style="background-color: {{ $p->status->color() }}"></span>
                                 {{ $p->status->label() }}
                             </span>
                             <span class="tabular text-xs text-muted">{{ $p->progress }}%</span>
                         </div>
-                        <x-ui.progress :value="$p->progress" :tone="$p->progress >= 100 ? 'success' : 'primary'" class="mt-2" />
+                        <x-ui.progress :value="$p->progress" :tone="$p->progress >= 100 ? 'success' : 'primary'"
+                                       class="mt-2"/>
 
                         <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
-                            <span><span class="tabular font-medium text-fg">{{ $open }}</span> تسک باز از <span class="tabular">{{ $p->tasks_count }}</span></span>
+                            <span><span class="tabular font-medium text-fg">{{ $open }}</span> تسک باز از <span
+                                    class="tabular">{{ $p->tasks_count }}</span></span>
                             @if ($p->overdue_count > 0)
                                 <span class="tabular rounded-full bg-danger/10 px-2 py-0.5 font-medium text-danger">{{ $p->overdue_count }} عقب‌افتاده</span>
                             @endif
                         </div>
 
-                        <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4" style="margin-top: 1.25rem">
+                        <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4"
+                             style="margin-top: 1.25rem">
                             <div class="flex -space-x-2 rtl:space-x-reverse">
                                 @foreach ($p->members->take(4) as $m)
-                                    <x-ui.avatar :user="$m" :size="28" class="ring-2 ring-surface" :title="$m->name" />
+                                    <x-ui.avatar :user="$m" :size="28" class="ring-2 ring-surface" :title="$m->name"/>
                                 @endforeach
                                 @if ($p->members->count() > 4)
-                                    <span class="tabular flex size-7 items-center justify-center rounded-full bg-line text-[0.6875rem] font-medium text-muted ring-2 ring-surface">+{{ $p->members->count() - 4 }}</span>
+                                    <span
+                                        class="tabular flex size-7 items-center justify-center rounded-full bg-line text-[0.6875rem] font-medium text-muted ring-2 ring-surface">+{{ $p->members->count() - 4 }}</span>
                                 @endif
                             </div>
 
@@ -334,7 +359,7 @@ new #[Title('پروژه‌ها')] class extends Component {
                                     'font-medium text-danger' => $live && $days < 0,
                                     'text-muted' => ! ($live && $days < 0),
                                 ]) title="{{ \App\Support\Dates::short($p->end_date) }}">
-                                    <x-ui.icon name="calendar" class="size-3.5" />
+                                    <x-ui.icon name="calendar" class="size-3.5"/>
                                     @if ($live)
                                         {{ $days < 0 ? abs($days).' روز دیرکرد' : ($days === 0 ? 'امروز تمام می‌شود' : $days.' روز مانده') }}
                                     @else
@@ -348,12 +373,15 @@ new #[Title('پروژه‌ها')] class extends Component {
             </div>
 
             @if ($projects->hasPages())
-                <div class="card"><x-ui.pagination :paginator="$projects" /></div>
+                <div class="card">
+                    <x-ui.pagination :paginator="$projects"/>
+                </div>
             @endif
         @else
             {{-- نمای ردیفی --}}
             <div class="card">
-                <div class="hidden gap-4 border-b border-line px-5 py-3 text-xs font-medium text-muted md:grid md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_3rem] lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)_3rem]">
+                <div
+                    class="hidden gap-4 border-b border-line px-5 py-3 text-xs font-medium text-muted md:grid md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_3rem] lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)_3rem]">
                     <div>پروژه</div>
                     <div>وضعیت</div>
                     <div>پیشرفت</div>
@@ -379,33 +407,39 @@ new #[Title('پروژه‌ها')] class extends Component {
                                     style="background-color: {{ $p->color ?? '#5B5BD6' }}"
                                 >{{ mb_substr($p->name, 0, 1) }}</span>
                                 <div class="min-w-0">
-                                    <a href="{{ route('projects.show', $p) }}" wire:navigate class="block truncate font-medium after:absolute after:inset-0">{{ $p->name }}</a>
+                                    <a href="{{ route('projects.show', $p) }}" wire:navigate
+                                       class="block truncate font-medium after:absolute after:inset-0">{{ $p->name }}</a>
                                     <p class="truncate text-xs text-muted">{{ $p->client?->name ?? 'بدون مشتری' }}</p>
                                 </div>
                             </div>
 
                             <div>
-                                <span class="inline-flex items-center gap-1.5 text-xs font-medium" style="color: {{ $p->status->color() }}">
-                                    <span class="size-1.5 rounded-full" style="background-color: {{ $p->status->color() }}"></span>
+                                <span class="inline-flex items-center gap-1.5 text-xs font-medium"
+                                      style="color: {{ $p->status->color() }}">
+                                    <span class="size-1.5 rounded-full"
+                                          style="background-color: {{ $p->status->color() }}"></span>
                                     {{ $p->status->label() }}
                                 </span>
                             </div>
 
                             <div class="flex items-center gap-3 max-md:w-40">
-                                <x-ui.progress :value="$p->progress" :tone="$p->progress >= 100 ? 'success' : 'primary'" class="flex-1" />
+                                <x-ui.progress :value="$p->progress" :tone="$p->progress >= 100 ? 'success' : 'primary'"
+                                               class="flex-1"/>
                                 <span class="tabular w-9 shrink-0 text-xs text-muted">{{ $p->progress }}%</span>
                             </div>
 
                             <div class="flex -space-x-2 rtl:space-x-reverse">
                                 @foreach ($p->members->take(3) as $m)
-                                    <x-ui.avatar :user="$m" :size="26" class="ring-2 ring-surface" :title="$m->name" />
+                                    <x-ui.avatar :user="$m" :size="26" class="ring-2 ring-surface" :title="$m->name"/>
                                 @endforeach
                                 @if ($p->members->count() > 3)
-                                    <span class="tabular flex size-[1.625rem] items-center justify-center rounded-full bg-line text-[0.625rem] font-medium text-muted ring-2 ring-surface">+{{ $p->members->count() - 3 }}</span>
+                                    <span
+                                        class="tabular flex size-[1.625rem] items-center justify-center rounded-full bg-line text-[0.625rem] font-medium text-muted ring-2 ring-surface">+{{ $p->members->count() - 3 }}</span>
                                 @endif
                             </div>
 
-                            <div class="hidden text-xs lg:block {{ $live && $days !== null && $days < 0 ? 'font-medium text-danger' : 'text-muted' }}">
+                            <div
+                                class="hidden text-xs lg:block {{ $live && $days !== null && $days < 0 ? 'font-medium text-danger' : 'text-muted' }}">
                                 {{ \App\Support\Dates::short($p->end_date) }}
                             </div>
 
@@ -416,7 +450,7 @@ new #[Title('پروژه‌ها')] class extends Component {
                     @endforeach
                 </ul>
 
-                <x-ui.pagination :paginator="$projects" />
+                <x-ui.pagination :paginator="$projects"/>
             </div>
         @endif
     @endif
