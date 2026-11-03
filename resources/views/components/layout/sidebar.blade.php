@@ -68,8 +68,7 @@
                         @if ($canClients)
                             <li>
                                 <x-ui.nav-item
-{{--                                    :href="route('clients')" --}}
-                                    href="#"
+                                    :href="route('clients')"
                                     icon="briefcase"
                                     label="مشتری‌ها"
                                     :active="request()->routeIs('clients')"
