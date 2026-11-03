@@ -2,6 +2,7 @@
 
 <div
     {{ $attributes->class('relative') }}
+    data-overlay
     x-data="{
         open: false,
         up: false,
@@ -30,14 +31,9 @@
         x-ref="panel"
         x-show="open"
         x-cloak
-        x-transition:enter="transition ease-out duration-150"
-        x-transition:enter-start="opacity-0 scale-95"
-        x-transition:enter-end="opacity-100 scale-100"
-        x-transition:leave="transition ease-in duration-100"
-        x-transition:leave-start="opacity-100 scale-100"
-        x-transition:leave-end="opacity-0 scale-95"
+        data-overlay-panel
         :class="up ? 'bottom-full mb-2 origin-bottom' : 'top-full mt-2 origin-top'"
-        class="panel absolute z-50 p-1.5 {{ $width }} {{ $align === 'start' ? 'start-0' : 'end-0' }}"
+        class="panel animate-pop-in absolute z-50 p-1.5 {{ $width }} {{ $align === 'start' ? 'start-0' : 'end-0' }}"
         role="menu"
         @click="$event.target.closest('[role=menuitem]') && close()"
         @keydown.arrow-down.prevent="focusItem(1)"

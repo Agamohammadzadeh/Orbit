@@ -18,6 +18,7 @@
 
 <div
     {{ $attributes->whereDoesntStartWith('wire:model')->class('relative') }}
+    data-overlay
     x-data="{
         open: false,
         up: false,
@@ -92,11 +93,9 @@
         x-ref="panel"
         x-show="open"
         x-cloak
-        x-transition:enter="transition ease-out duration-100"
-        x-transition:enter-start="opacity-0 scale-95"
-        x-transition:enter-end="opacity-100 scale-100"
+        data-overlay-panel
         :class="up ? 'bottom-full mb-1.5 origin-bottom' : 'top-full mt-1.5 origin-top'"
-        class="panel absolute inset-x-0 z-40 max-h-64 min-w-max overflow-y-auto p-1.5"
+        class="panel animate-pop-in absolute inset-x-0 z-40 max-h-64 min-w-max overflow-y-auto p-1.5"
         role="listbox"
     >
         @foreach ($list as $i => $option)

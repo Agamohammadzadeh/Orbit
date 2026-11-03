@@ -8,6 +8,7 @@
 
 <div
     {{ $attributes->whereDoesntStartWith('wire:model')->class('relative') }}
+    data-overlay
     x-data="{
         open: false,
         up: false,
@@ -121,11 +122,9 @@
     <div
         x-show="open"
         x-cloak
-        x-transition:enter="transition ease-out duration-100"
-        x-transition:enter-start="opacity-0 scale-95"
-        x-transition:enter-end="opacity-100 scale-100"
+        data-overlay-panel
         :class="up ? 'bottom-full mb-1.5 origin-bottom' : 'top-full mt-1.5 origin-top'"
-        class="panel absolute start-0 z-40 w-72 p-3"
+        class="panel animate-pop-in absolute start-0 z-40 w-72 p-3"
         role="dialog"
         aria-label="انتخاب تاریخ"
     >

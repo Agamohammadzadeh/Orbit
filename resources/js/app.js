@@ -133,3 +133,22 @@ document.addEventListener('alpine:init', () => {
         },
     });
 });
+
+
+// ---------------- بستن پنل‌های باز هنگام جابه‌جایی بین صفحه‌ها ----------------
+// دراپ‌داون، انتخاب و تقویم با data-overlay و data-overlay-panel علامت‌گذاری شده‌اند.
+// livewire:navigating قبل از ذخیره‌ی عکس صفحه (برای دکمه‌ی بازگشت) اجرا می‌شود،
+// پس پنل‌ها باید همین‌جا هم از نظر DOM بسته شوند.
+function closeOverlays() {
+    document.querySelectorAll('[data-overlay-panel]').forEach((panel) => {
+        panel.style.display = 'none';
+    });
+
+    document.querySelectorAll('[data-overlay]').forEach((root) => {
+        const data = window.Alpine?.$data(root);
+        if (data && 'open' in data) data.open = false;
+    });
+}
+
+document.addEventListener('livewire:navigating', closeOverlays);
+document.addEventListener('livewire:navigated', closeOverlays);
