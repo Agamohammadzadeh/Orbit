@@ -230,7 +230,7 @@ new #[Title('گزارش‌ها')] class extends Component {
             />
         </div>
 
-        <div class="grid gap-6 lg:grid-cols-3 lg:items-stretch">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:items-stretch">
             {{-- ستون اصلی: نمودار و دو کارت آماری (کارت‌های پایین کش می‌آیند تا هم‌قد ستون کناری شوند) --}}
             <div class="flex flex-col gap-6 lg:col-span-2">
                 {{-- نمودار --}}
@@ -479,7 +479,7 @@ new #[Title('گزارش‌ها')] class extends Component {
             <x-ui.pagination :paginator="$rows" />
         </div>
 
-        <div class="grid items-start gap-6 lg:grid-cols-2">
+        <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
             {{-- حجم کار --}}
             <div class="card">
                 <div class="border-b border-line px-5 py-4">

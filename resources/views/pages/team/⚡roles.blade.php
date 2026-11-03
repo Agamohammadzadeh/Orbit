@@ -202,7 +202,7 @@ new #[Title('نقش‌ها و دسترسی‌ها')] class extends Component {
 
     <x-ui.flash :message="$flash" :error="$flashIsError" wire:key="flash-{{ $flashId }}" />
 
-    <div class="grid items-start gap-6 lg:grid-cols-3">
+    <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
         {{-- فهرست نقش‌ها --}}
         <div class="card p-2">
             <ul class="space-y-1">

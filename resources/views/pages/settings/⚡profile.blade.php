@@ -177,7 +177,7 @@ class extends Component {
         </div>
     @endif
 
-    <div class="grid items-start gap-6 lg:grid-cols-3">
+    <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
         {{-- ستون اول: خلاصه‌ی حساب و دسترسی‌ها --}}
         <div class="space-y-6">
             <div class="card p-6 text-center">

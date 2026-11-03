@@ -26,6 +26,8 @@ new #[Title('پروژه')] class extends Component {
 
     public function mount(Project $project): void
     {
+        Gate::authorize('view', $project);
+
         $this->project = $project;
 
         if (! in_array($this->tab, ['board', 'list', 'sprints', 'phases'], true)) {

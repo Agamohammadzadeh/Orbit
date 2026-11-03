@@ -145,7 +145,7 @@ new class extends Component {
                     :class="over ? 'border-primary bg-primary-soft' : 'border-line'"
                     class="mt-4 rounded-control border border-dashed px-4 py-5 text-center transition"
                 >
-                    <label class="inline-flex items-center gap-2 text-sm text-muted">
+                    <label class="inline-flex flex-wrap items-center justify-center gap-2 text-sm text-muted">
                     <span wire:loading.remove wire:target="files" class="inline-flex items-center gap-2">
                         <x-ui.icon name="upload" class="size-4.5"/>
                         فایل را اینجا رها کن یا
@@ -171,7 +171,7 @@ new class extends Component {
             @if ($items->isNotEmpty())
                 <ul class="mt-4 divide-y divide-line">
                     @foreach ($items as $a)
-                        <li wire:key="attachment-{{ $a->id }}" class="flex items-center gap-3 py-3">
+                        <li wire:key="attachment-{{ $a->id }}" class="flex min-w-0 items-center gap-3 py-3">
                             @if ($a->isImage() && ! str_contains((string) $a->mime_type, 'svg'))
                                 <img src="{{ route('attachments.download', ['attachment' => $a, 'inline' => 1]) }}"
                                      alt="" loading="lazy"

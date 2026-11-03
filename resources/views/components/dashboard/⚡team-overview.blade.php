@@ -52,7 +52,7 @@ new class extends Component {
         <x-ui.stat-card tag="div" label="انجام‌شده این هفته" :value="$stats['done']" icon="check-circle" tone="success" />
     </div>
 
-    <div class="grid items-start gap-6 lg:grid-cols-2">
+    <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
         {{-- حجم کار اعضا --}}
         <div class="card">
             <div class="border-b border-line px-5 py-4">

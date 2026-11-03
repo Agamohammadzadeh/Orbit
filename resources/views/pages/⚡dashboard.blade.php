@@ -155,7 +155,7 @@ new #[Title('داشبورد')] class extends Component {
             </div>
         @endif
 
-        <div class="grid items-start gap-6 lg:grid-cols-3">
+        <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
             @if ($canWork)
                 <div class="lg:col-span-2">
                     <livewire:dashboard.my-tasks :filter="$filter" />

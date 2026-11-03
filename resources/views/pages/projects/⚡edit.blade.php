@@ -9,6 +9,8 @@ new #[Title('ویرایش پروژه')] class extends Component {
 
     public function mount(Project $project): void
     {
+        Gate::authorize('update', $project);
+
         $this->project = $project;
     }
 };

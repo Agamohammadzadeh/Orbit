@@ -193,7 +193,7 @@ new class extends Component {
     $palette = ['#5B5BD6', '#12A594', '#D6409F', '#F5A524', '#3E8EF7', '#FF7A59', '#E5484D', '#8B8BA3'];
 @endphp
 
-<form wire:submit="save" class="grid items-start gap-6 lg:grid-cols-3" novalidate>
+<form wire:submit="save" class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3" novalidate>
     {{-- ستون اصلی --}}
     <div class="space-y-6 lg:col-span-2">
         <div class="card space-y-5 p-6">
