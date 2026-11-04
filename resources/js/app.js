@@ -39,3 +39,116 @@ document.addEventListener('alpine:init', () => {
 document.addEventListener('livewire:navigated', () => {
     window.Alpine?.store('theme')?.apply();
 });
+
+
+// ---------------- سایدبار ----------------
+const SIDEBAR_KEY = 'orbit-sidebar';
+
+document.addEventListener('alpine:init', () => {
+    // استفاده در Blade:  $store.sidebar.toggle()  |  $store.sidebar.mobileOpen
+    window.Alpine.store('sidebar', {
+        collapsed: document.documentElement.classList.contains('sb-collapsed'),
+        mobileOpen: false,
+
+        // دسکتاپ: جمع/باز می‌کند و ذخیره می‌کند. موبایل: کشوی منو را باز/بسته می‌کند.
+        toggle() {
+            if (window.matchMedia('(min-width: 1024px)').matches) {
+                this.collapsed = !this.collapsed;
+                document.documentElement.classList.toggle('sb-collapsed', this.collapsed);
+                try {
+                    localStorage.setItem(SIDEBAR_KEY, this.collapsed ? '1' : '0');
+                } catch (e) {}
+            } else {
+                this.mobileOpen = !this.mobileOpen;
+            }
+        },
+
+        closeMobile() {
+            this.mobileOpen = false;
+        },
+    });
+});
+
+// بعد از هر wire:navigate: کشوی موبایل بسته شود و حالت جمع‌شده حفظ بماند
+document.addEventListener('livewire:navigated', () => {
+    const store = window.Alpine?.store('sidebar');
+    if (!store) return;
+    store.closeMobile();
+    document.documentElement.classList.toggle('sb-collapsed', store.collapsed);
+});
+
+
+
+// ---------------- دیالوگ تأیید سراسری ----------------
+// استفاده در Blade (داخل هر کامپوننت Livewire):
+//   @click="$store.confirm.ask({
+//       title: 'حذف تسک',
+//       message: 'این کار قابل بازگشت نیست.',
+//       confirmLabel: 'حذف',
+//       tone: 'danger',                       // danger | primary
+//       action: () => $wire.deleteTask(),     // تابعی که بعد از تأیید اجرا می‌شود
+//   })"
+document.addEventListener('alpine:init', () => {
+    window.Alpine.store('confirm', {
+        open: false,
+        busy: false,
+        title: '',
+        message: '',
+        confirmLabel: 'تأیید',
+        cancelLabel: 'انصراف',
+        tone: 'danger',
+        _action: null,
+
+        ask({ title, message = '', confirmLabel = 'تأیید', cancelLabel = 'انصراف', tone = 'danger', action }) {
+            Object.assign(this, {
+                title,
+                message,
+                confirmLabel,
+                cancelLabel,
+                tone,
+                _action: action,
+                busy: false,
+                open: true,
+            });
+        },
+
+        // تا تمام شدن عملیات (مثلاً درخواست Livewire) دیالوگ باز می‌ماند و دکمه spinner دارد
+        async accept() {
+            if (this.busy) return;
+            this.busy = true;
+
+            try {
+                await this._action?.();
+            } finally {
+                this.busy = false;
+                this.open = false;
+                this._action = null;
+            }
+        },
+
+        cancel() {
+            if (this.busy) return;
+            this.open = false;
+            this._action = null;
+        },
+    });
+});
+
+
+// ---------------- بستن پنل‌های باز هنگام جابه‌جایی بین صفحه‌ها ----------------
+// دراپ‌داون، انتخاب و تقویم با data-overlay و data-overlay-panel علامت‌گذاری شده‌اند.
+// livewire:navigating قبل از ذخیره‌ی عکس صفحه (برای دکمه‌ی بازگشت) اجرا می‌شود،
+// پس پنل‌ها باید همین‌جا هم از نظر DOM بسته شوند.
+function closeOverlays() {
+    document.querySelectorAll('[data-overlay-panel]').forEach((panel) => {
+        panel.style.display = 'none';
+    });
+
+    document.querySelectorAll('[data-overlay]').forEach((root) => {
+        const data = window.Alpine?.$data(root);
+        if (data && 'open' in data) data.open = false;
+    });
+}
+
+document.addEventListener('livewire:navigating', closeOverlays);
+document.addEventListener('livewire:navigated', closeOverlays);

@@ -42,6 +42,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
             'last_seen_at' => 'datetime',
+            'notification_settings' => 'array',
         ];
     }
 

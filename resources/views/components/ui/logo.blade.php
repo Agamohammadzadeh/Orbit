@@ -2,7 +2,7 @@
     'variant' => 'full',
     'size' => 32,
     'tone' => 'auto',
-    'locale' => 'en',
+    'locale' => app()->getLocale(),
     'title' => 'Orbit',
 ])
 
