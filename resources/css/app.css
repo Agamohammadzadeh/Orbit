@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
-/* فونت‌ها از npm و به‌صورت لوکال لود می‌شن (بدون وابستگی به Google Fonts) */
+/* Vazir Font */
 @font-face {
     font-family: "Vazir";
-    src: url("../fonts/Vazir/Vazir-Light-FD.woff2") format("woff2")
+    src: url("../fonts/Vazir/Vazir-Light-FD.woff2") format("woff2") ,
          url("../fonts/Vazir/Vazir-Light-FD.woff") format("woff");
     font-weight: 300;
     font-style: normal;
@@ -11,7 +11,7 @@
 }
 @font-face {
     font-family: "Vazir";
-    src: url("../fonts/Vazir/Vazir-Regular-FD.woff2") format("woff2")
+    src: url("../fonts/Vazir/Vazir-Regular-FD.woff2") format("woff2") ,
          url("../fonts/Vazir/Vazir-Regular-FD.woff") format("woff");
     font-weight: 400;
     font-style: normal;
@@ -19,7 +19,7 @@
 }
 @font-face {
     font-family: "Vazir";
-    src: url("../fonts/Vazir/Vazir-Medium-FD.woff2") format("woff2")
+    src: url("../fonts/Vazir/Vazir-Medium-FD.woff2") format("woff2") ,
          url("../fonts/Vazir/Vazir-Medium-FD.woff") format("woff");
     font-weight: 500;
     font-style: normal;
@@ -27,7 +27,7 @@
 }
 @font-face {
     font-family: "Vazir";
-    src: url("../fonts/Vazir/Vazir-Bold-FD.woff2") format("woff2")
+    src: url("../fonts/Vazir/Vazir-Bold-FD.woff2") format("woff2") ,
          url("../fonts/Vazir/Vazir-Bold-FD.woff") format("woff");
     font-weight: 700;
     font-style: normal;
@@ -36,7 +36,7 @@
 
 @font-face {
     font-family: "Vazir";
-    src: url("../fonts/Vazir/Vazir-Black-FD.woff2") format("woff2")
+    src: url("../fonts/Vazir/Vazir-Black-FD.woff2") format("woff2") ,
          url("../fonts/Vazir/Vazir-Black-FD.woff") format("woff");
     font-weight: 800;
     font-style: normal;
@@ -117,9 +117,9 @@
     --color-prio-urgent: #E5484D;
 
     /* حروف لاتین با Space Grotesk، فارسی با Vazir */
-    --font-sans: "Space Grotesk Variable", "Vazir", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: "Vazir", ui-sans-serif, system-ui, sans-serif;
     --font-fa: "Vazir", ui-sans-serif, system-ui, sans-serif;
-    --font-brand: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-brand: "Vazir", ui-sans-serif, system-ui, sans-serif;
 
     --radius-control: 0.5rem;   /* 8px  دکمه و اینپوت */
     --radius-card: 0.75rem;     /* 12px کارت */
