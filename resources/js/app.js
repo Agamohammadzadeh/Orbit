@@ -152,3 +152,21 @@ function closeOverlays() {
 
 document.addEventListener('livewire:navigating', closeOverlays);
 document.addEventListener('livewire:navigated', closeOverlays);
+
+// ---------------- انقضای نشست ----------------
+document.addEventListener('livewire:init', () => {
+    window.Livewire.interceptRequest(({ onError }) => {
+        onError(({ response, preventDefault }) => {
+            if (response?.status !== 419 && response?.status !== 401) return;
+
+            preventDefault();
+
+            // جلوگیری از حلقه‌ی رفرش: حداکثر یک‌بار در ۱۰ ثانیه
+            const last = Number(sessionStorage.getItem('orbit-session-reload') || 0);
+            if (Date.now() - last < 10000) return;
+
+            sessionStorage.setItem('orbit-session-reload', String(Date.now()));
+            window.location.reload();
+        });
+    });
+});

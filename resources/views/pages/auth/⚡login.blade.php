@@ -56,7 +56,17 @@ new #[Layout('layouts::auth')] #[Title('ورود')] class extends Component {
         RateLimiter::clear($this->throttleKey());
         session()->regenerate();
 
-        $this->redirectIntended(default: route('dashboard'), navigate: true);
+                $intended = (string) session()->pull('url.intended', '');
+        $host = parse_url($intended, PHP_URL_HOST);
+        $path = (string) parse_url($intended, PHP_URL_PATH);
+
+        $safe = $intended !== ''
+            && ($host === null || $host === request()->getHost())
+            && $path !== ''
+            && $path !== '/login'
+            && ! str_starts_with($path, '/livewire');
+
+        $this->redirect($safe ? $intended : route('dashboard'), navigate: true);
     }
 
     protected function ensureIsNotRateLimited(): void
