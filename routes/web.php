@@ -37,8 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:users.manage')->prefix('team')->group(function () {
         Route::livewire('/', 'pages::team.index')->name('team');
         Route::livewire('/roles', 'pages::team.roles')->name('team.roles');
-        Route::livewire('/clients', 'pages::clients.index')->name('clients');
     });
+
+    Route::livewire('/clients', 'pages::clients.index')
+        ->middleware('can:clients.manage')
+        ->name('clients');
 
     Route::livewire('/notifications', 'pages::notifications.index')->name('notifications');
 
